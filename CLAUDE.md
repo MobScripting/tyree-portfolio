@@ -11,6 +11,8 @@ Personal portfolio for Tyree Chappell, aimed at full-stack/SaaS and AI/LLM engin
 - `npm run dev`: dev server on :3000. In the desktop app, start it with the `portfolio` preview config in `.claude/launch.json`.
 - `npm run build`: production build.
 - `npm run lint`: ESLint.
+- `npm run eval:answers [url]`: answer eval through the real panel in Edge with WebGPU. It downloads the model into a reusable temp profile (`--clean` removes it); `EVAL_MODEL=<WebLLM id>` tries another model. Read the answers in `.impeccable/review/eval-answers*.json`, not just the score: a keyword pass doesn't prove an answer is true.
+- `npm run eval:retrieval`: retrieval eval for the Assistant. After content changes, rebuild the corpus with `npm run corpus`.
 - `npm run typecheck`: runs `next typegen` then `tsc`. `LayoutProps`/`PageProps` are generated types, so plain `tsc` fails without typegen.
 - `node scripts/capture.mjs [baseUrl]`: headless Playwright captures with SwiftShader WebGL into `.impeccable/review/`: desktop 1440 and mobile 390, full page, first viewport, each stage slot, and the hero intro. It also prints stage state, horizontal overflow and console errors. Use it when the browser pane can't screenshot.
 - `npm run resume:pdf`: prints `/resume` and `/resume/ai` to `public/Tyree-Chappell-Resume-{FullStack,AI}.pdf` via Playwright. Run it against `npx next start -p 3100` after `npm run build`, and rerun it whenever `src/content/` changes. It fails if a sheet passes one Letter page or the text contains a phone-like number. Commit the regenerated PDFs. `next start` serves only `public/` files that existed at build time, so rebuild before testing downloads locally.
@@ -25,7 +27,7 @@ Personal portfolio for Tyree Chappell, aimed at full-stack/SaaS and AI/LLM engin
   - 0001: HTML owns every fact; the 3D Stage is aria-hidden decoration.
   - 0002: one content source drives the site and both resume variants.
   - 0004: verifiable claims only, and no phone number or street address in anything public.
-  - 0005: a server runtime (not static export) for the Assistant route.
+  - 0006 (supersedes 0005): the Assistant runs on the visitor's device. There's no API and no server route.
 - `.impeccable/surfaces/src-app-page-tsx.md`: the home page's direction contract (Apple keynote, dark stage, one indigo accent). DESIGN.md gets written at the end of the build by impeccable's documenter.
 - `.scratch/portfolio/issues/NN-*.md`: tickets with blocking edges and acceptance checklists. Mark checkboxes and Status as work lands.
 
@@ -40,7 +42,7 @@ Personal portfolio for Tyree Chappell, aimed at full-stack/SaaS and AI/LLM engin
 - `StageLoader` mounts from the home page, not the layout: other routes have no slots.
 - `/resume` (full-stack) and `/resume/ai` render `components/ResumeScreen.tsx` around `components/Resume.tsx`. Content comes from `content/resume.ts` (per-track title, summary, project order, tagged bullets and skills) plus `profile` and `experience`, where `Job.tracks` can limit a job to one variant. Each is a white Letter sheet, and print CSS in `globals.css` hides the toolbar. Both sheets are nearly full (full-stack 1039 and AI 1051 of 1056px): new wording must replace something. AI wording claims no RAG, evals or LLM APIs until the Assistant ships.
 - Metadata: `app/opengraph-image.tsx` and `app/work/[slug]/opengraph-image.tsx` render through `lib/og.tsx`, which reads Geist TTFs from the `geist` package; `next.config.ts` traces them into the functions, so keep the two in sync if you move fonts. Satori draws some word gaps slightly wide; that's known and accepted. `app/icon.tsx`, `sitemap.ts` and `robots.ts` derive URLs from `profile.links.site`, and JSON-LD Person is on the home page.
-- Planned (see tickets): the Assistant API route (ticket 13).
+- The Assistant (`components/Assistant.tsx`, mounted in the layout) works like this: `scripts/build-corpus.ts` (run by predev/prebuild) turns `src/content/` and the case-study MDX into `src/assistant/corpus.json` (gitignored). Each chunk has a deep link, and case-study headings get matching ids via `lib/slug.ts`. `assistant/retrieve.ts` does BM25 with stemming and a title-coverage bonus. `assistant/engine.ts` loads WebLLM (Llama 3.2 3B, f16 or f32 by GPU; picked with `npm run eval:answers`, which needs a WebGPU GPU and runs in Edge) in `assistant/worker.ts`, and only after the visitor opts in. Without WebGPU it answers with passages. Add new site content to `src/content/` so it's retrievable, and keep `src/assistant/eval-set.json` passing with `npm run eval:retrieval` (fails under 90% recall@4).
 
 ## Constraints
 

@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Delegated, then confirmed by the user: Next.js (App Router, TypeScript), react-three-fiber + drei, GSAP ScrollTrigger, Lenis, Tailwind, MDX. Deployed on Vercel. One server route powers the Assistant (see docs/adr/0005).
+Delegated, then confirmed by the user: Next.js (App Router, TypeScript), react-three-fiber, Lenis, Tailwind, MDX, WebLLM. Deployed on Vercel as a static site; the Assistant runs on the visitor's device (docs/adr/0006).
 
 ## Users
 
@@ -36,7 +36,7 @@ Recruiters visit from a link in an application, a LinkedIn profile or a resume, 
 - The site and both resume variants come from one content source (docs/adr/0002).
 - The FlowPulse repo is private: there are no code links, only a "request a walkthrough" contact.
 - Personal details shown publicly: name, email (mobhater02@gmail.com, the user's choice), "Johnson City, TN · open to relocate", GitHub (MobScripting). No phone number or street address anywhere public.
-- The Assistant is a public paid endpoint: rate-limited, spend-capped, and answers only about portfolio topics.
+- The Assistant runs entirely in the visitor's browser (docs/adr/0006): BM25 retrieval over site content, plus an opt-in on-device Llama 3.2 3B through WebLLM. It has no server cost and no API key, and answers only from the site's content, with citations.
 - Open: LinkedIn URL (hidden until provided), custom domain (later).
 
 ## Brand Commitments

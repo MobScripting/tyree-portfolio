@@ -1,17 +1,20 @@
 import type { MDXComponents } from "mdx/types";
 import { Architecture } from "@/components/Architecture";
+import { slugify, textOf } from "@/lib/slug";
 
 // Read-mode typography for case studies. Headings and measure follow the craft floor:
 // body at 65-75ch, more space above a heading than below it.
 const components: MDXComponents = {
+  // Headings get ids so assistant citations can deep-link to them (lib/slug.ts).
   h2: (p) => (
     <h2
+      id={slugify(textOf(p.children))}
       className="mt-24 mb-6 text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-balance"
       {...p}
     />
   ),
   h3: (p) => (
-    <h3 className="mt-14 mb-3 text-[21px] leading-tight font-semibold tracking-[-0.015em] text-balance" {...p} />
+    <h3 id={slugify(textOf(p.children))} className="mt-14 mb-3 text-[21px] leading-tight font-semibold tracking-[-0.015em] text-balance" {...p} />
   ),
   p: (p) => <p className="mt-5 max-w-[68ch] text-[17px] leading-[1.7] text-ink-muted text-pretty" {...p} />,
   ul: (p) => <ul className="mt-5 max-w-[68ch] list-disc space-y-2.5 pl-5 text-[17px] leading-[1.65] text-ink-muted marker:text-hairline" {...p} />,

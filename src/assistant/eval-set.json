@@ -1,0 +1,22 @@
+[
+  { "q": "What is FlowPulse?", "expect": ["flowpulse", "work/flowpulse/the-problem"], "mention": ["invoic", "small business"] },
+  { "q": "How does FlowPulse keep one customer's data away from another's?", "expect": ["work/flowpulse/tenancy-is-enforced-once-in-middleware", "flowpulse/multi-tenant-from-the-schema-up"], "mention": ["organization"] },
+  { "q": "How does billing work in FlowPulse?", "expect": ["flowpulse/billing-that-enforces-itself", "work/flowpulse/plans-are-a-table-not-scattered-conditionals", "work/flowpulse/stripe-webhooks-keep-their-raw-body"], "mention": ["stripe"] },
+  { "q": "What happens when a FlowPulse trial expires?", "expect": ["work/flowpulse/plans-are-a-table-not-scattered-conditionals", "flowpulse/billing-that-enforces-itself"], "mention": ["block"] },
+  { "q": "Does FlowPulse support single sign-on or two-factor login?", "expect": ["work/flowpulse/security", "flowpulse/security-a-finance-team-would-ask-for"], "mention": ["saml"] },
+  { "q": "Where is FlowPulse hosted and how is it deployed?", "expect": ["work/flowpulse/running-it", "work/flowpulse/architecture", "flowpulse/shipped-and-operated-by-me"], "mention": ["proxmox"] },
+  { "q": "How does bank reconciliation match transactions to invoices?", "expect": ["work/flowpulse/reconciliation-that-explains-its-guesses"], "mention": ["score"] },
+  { "q": "Does FlowPulse have automated tests?", "expect": ["work/flowpulse/what-id-do-next"], "mention": ["test"] },
+  { "q": "What does the AD Account Manager do?", "expect": ["ad-manager", "work/ad-manager/the-problem"], "mention": ["active directory"] },
+  { "q": "How does the AD tool talk to PowerShell?", "expect": ["work/ad-manager/json-over-stdin-not-command-line-arguments", "ad-manager/a-typed-bridge-to-powershell"], "mention": ["json"] },
+  { "q": "How do you avoid creating duplicate Active Directory accounts?", "expect": ["work/ad-manager/check-duplicates-against-the-directory", "ad-manager/templates-instead-of-checklists"], "mention": ["duplicate"] },
+  { "q": "How is the AD Account Manager installed?", "expect": ["work/ad-manager/installing-it"], "mention": ["script"] },
+  { "q": "How do you work with AI coding agents?", "expect": ["ai/requirements-interrogated", "ai/tickets-with-blocking-edges", "ai/agents-with-real-tools"], "mention": ["agent"] },
+  { "q": "What is Tended Earth?", "expect": ["lab/tended-earth", "ai/agents-with-real-tools"], "mention": ["godot"] },
+  { "q": "Where does Tyree work now?", "expect": ["experience/unbound-digital", "profile"], "mention": ["unbound"] },
+  { "q": "What did he do on the help desk?", "expect": ["experience/k-va-t-food-stores"], "mention": ["store"] },
+  { "q": "Which programming languages does he know?", "expect": ["skills"], "mention": ["typescript"] },
+  { "q": "Is he willing to relocate?", "expect": ["profile"], "mention": ["relocat"] },
+  { "q": "What is his education?", "expect": ["education"], "mention": ["high school"] },
+  { "q": "Has he built websites for clients?", "expect": ["lab/lawn-titans-services"], "mention": ["lawn"] }
+]

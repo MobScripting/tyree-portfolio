@@ -3,6 +3,7 @@ import { profile } from "@/content/profile";
 import { featured, lab, type FeaturedProject } from "@/content/projects";
 import { experience } from "@/content/experience";
 import { resumePdf, resumeRoute } from "@/content/resume";
+import { practices } from "@/content/ai";
 import { CopyEmail } from "./CopyEmail";
 
 export const shell = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
@@ -236,20 +237,6 @@ export function Work() {
   );
 }
 
-const practices = [
-  {
-    title: "Requirements, interrogated",
-    body: "Before code, an agent interviews me one round at a time until every decision is made. Then the answers are written down as decision records and a glossary that later sessions must follow.",
-  },
-  {
-    title: "Tickets with blocking edges",
-    body: "Work is cut into vertical slices that each name what blocks them, so independent tickets run in parallel agent sessions and hand off through written notes rather than memory.",
-  },
-  {
-    title: "Agents with real tools",
-    body: "On Tended Earth, Claude Code drives the Godot editor over MCP: it builds scenes, runs the game and reads its errors, while more than forty numbered decisions keep it on course.",
-  },
-];
 
 export function AiSection() {
   return (
