@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* Stage world (direction contract: .impeccable/surfaces/src-app-page-tsx.md).
+   Dark is chosen by scene, not category: a keynote hall where light comes from the product. */
+:root {
+  --stage: #050507;
+  --stage-raised: #0d0d11;
+  --graphite: #1d1d22;
+  --hairline: #2a2a31;
+  --ink: #f5f5f7;
+  --ink-muted: #8e8e95;
+  /* FlowPulse brand family. 600 carries white text at AA; 300 is the accent as text on the stage. */
+  --accent: #4f46e5;
+  --accent-bright: #6366f1;
+  --accent-ink: #a5b4fc;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-stage: var(--stage);
+  --color-stage-raised: var(--stage-raised);
+  --color-graphite: var(--graphite);
+  --color-hairline: var(--hairline);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-ink: var(--accent-ink);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--stage);
+  scroll-padding-top: 5rem;
+}
+
+/* No body background: the Stage sits at z-index -1 and would be painted over. */
+body {
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+a {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--graphite) var(--stage);
+}
+
+/* Stage slots hold space for a Device. They exist only when the head script confirmed
+   WebGL, so with no JS or no GPU the layout closes up instead of showing empty gaps. */
+[data-stage-slot] {
+  display: none;
+}
+html[data-stage="on"] [data-stage-slot] {
+  display: block;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
