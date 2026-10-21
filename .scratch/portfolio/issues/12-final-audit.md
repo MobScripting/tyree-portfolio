@@ -4,12 +4,12 @@
 
 **Blocked by:** 04, 06, 07, 10, 11, 13, 14, 15
 
-**Status:** in-progress (code done; production Lighthouse and the answer eval remain)
+**Status:** in-progress (only the answer eval remains; needs free GPU memory)
 
 - [x] impeccable finish review; fixes applied (rebuild → fix; all material fixes applied, DESIGN.md recorded)
 - [x] web-design-guidelines review
-- [ ] Lighthouse targets met on the preview URL
-- [ ] verify-and-stop against all acceptance lists
+- [x] Lighthouse targets met on the preview URL (production, mobile, real GPU: Perf 84/91/91, A11y 100, Best practices 100, SEO 100; software GL worst case Perf 70)
+- [x] verify-and-stop against all acceptance lists (tickets 01-11 and 13-15 closed; no phone number in src, public or the PDFs)
 - [ ] `npm run eval:answers` (22 questions) passes on a free GPU
 
 Notes:
