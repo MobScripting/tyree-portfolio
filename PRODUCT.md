@@ -46,7 +46,7 @@ The user explicitly chose an Apple-design direction: dark, keynote-style product
 ## Evidence on Hand
 
 - **FlowPulse:** `f:\saasbusiness\flowpulse` — 128 commits, 33 Prisma models, ~190 route handlers, Stripe billing, SAML SSO, TOTP 2FA, audit log, approvals, Docker Compose prod/staging, nginx, self-hosted on Proxmox. Live at flowpulseapp.org. Marketing site with SEO pages and free tools.
-- **AD Account Manager:** `f:\saasbusiness\Autocreate AD Account` — Next.js 14 + TS, NextAuth, Prisma, PowerShell bridge, SSE job progress, webhooks, one-click Windows-service installer. Shown only with sanitized data.
+- **AD Account Manager:** `f:\saasbusiness\Autocreate AD Account` — Next.js 14 + TS, NextAuth, Prisma, PowerShell bridge, SSE job progress, webhooks, one-click PowerShell installer (Node, RSAT, build, auto-start scheduled task). Shown only with sanitized data.
 - **Lab:** TendedEarth (Godot, `F:\GodotGames\tendedearth`, 70 commits), Lawn Titans client site (`F:\lawntitans`).
 - **Resume source:** `C:\Users\mobha\Downloads\Resume-1.pdf`.
 - **Absent, never to be fabricated:** user counts, revenue, testimonials, employer endorsements, certifications beyond "IT Fundamentals".

@@ -8,6 +8,7 @@ import {
   Proof,
   Work,
 } from "@/components/sections";
+import { StageLoader } from "@/components/StageLoader";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <Lab />
         <Contact />
       </main>
+      <StageLoader />
     </>
   );
 }

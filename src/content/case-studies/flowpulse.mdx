@@ -1,0 +1,74 @@
+{/* Every claim here was checked against f:\saasbusiness\flowpulse. Re-verify before editing. */}
+
+## The problem
+
+Freelancers and small trade businesses run their money across invoicing software, a spreadsheet of expenses, a time tracker and their bank. FlowPulse puts that in one place: invoices and credit notes, expenses and receipts, time and projects, budgets, bank reconciliation, a portal where clients see and pay their invoices, and approval workflows for teams that need sign-off.
+
+I built it alone, from schema to servers, and I operate it in production at [flowpulseapp.org](https://flowpulseapp.org).
+
+## Architecture
+
+<Architecture
+  title="Request path in production"
+  path={[
+    { name: "Browser", detail: "React 18 + Vite single-page app" },
+    { name: "NGINX Proxy Manager", detail: "TLS termination, on its own Proxmox LXC" },
+    { name: "nginx container", detail: "Serves the built SPA, proxies /api and /uploads" },
+    {
+      name: "Express API",
+      detail: "Auth, organization scoping, plan gates, approvals",
+      services: ["Stripe", "SAML IdP", "SMTP", "Chromium (PDFs)", "node-cron"],
+    },
+    { name: "PostgreSQL 16", detail: "Prisma, 33 models, internal network only" },
+  ]}
+/>
+
+Docker Compose runs three services, the database, the API and the web container, on an internal network. The database is never exposed on the host. A second Compose file stands up staging with the same images.
+
+## Decisions worth explaining
+
+### Tenancy is enforced once, in middleware
+
+The auth middleware resolves the user's membership for the organization in their token and attaches `req.organizationId` to the request. Route handlers query through that value instead of trusting anything from the client, so a forgotten filter is a code-review smell rather than a cross-tenant leak waiting to happen. Thirty-one of the thirty-two route modules scope their data this way. The exception holds the public, unauthenticated routes.
+
+### Plans are a table, not scattered conditionals
+
+Every plan's limits (clients, monthly invoices, members, forecasting, reminders) live in a single table, and one middleware checks them before any create. Trials are the subtle part: a free workspace gets 14 days and a founding-member workspace 60. When a trial lapses, new records are blocked with a specific error code the UI can explain, but a workspace with a live subscription is never blocked, even mid-renewal.
+
+### Stripe webhooks keep their raw body
+
+Stripe signs the exact bytes it sends. The webhook router is mounted before the JSON body parser and reads `express.raw`, so `constructEvent` verifies the signature against the original payload. Checkout completion and subscription updates or cancellations then move the workspace between plans.
+
+### Approvals only where trust is missing
+
+Owners and admins bypass approvals. Members trigger a configurable chain per resource type, but only above that resource's amount threshold. Each step notifies the role that has to act next, and the original requester hears the final outcome.
+
+### Reconciliation that explains its guesses
+
+Imported bank transactions are scored against open invoices, and the score is simple enough to explain to a customer:
+
+```js
+// Amount:  exact 50, within 1% 40, within 5% 20, else no candidate
+// Date:    within 1 day 30, 7 days 20, 30 days 10
+// Name:    10 per client-name token in the description, max 20
+const AUTO_MATCH_THRESHOLD = 80; // confirmed automatically
+const SUGGEST_THRESHOLD = 50;    // suggested; a person confirms
+```
+
+High-confidence matches close themselves, and ambiguous ones wait for a person. A wrong automatic match in someone's books costs more than a click.
+
+## Security
+
+- **Sign-in:** per-organization SAML single sign-on, and TOTP two-factor with QR enrollment and eight single-use backup codes, stored bcrypt-hashed.
+- **Sessions:** refresh tokens are stored as hashes and rotated on every use, so a stolen token works at most once.
+- **Abuse limits:** the API allows 200 requests per 15 minutes per client, and login, registration and password-reset endpoints allow 20.
+- **Hardening:** an explicit CORS allowlist, Helmet security headers, and Zod schema validation on request input.
+- **Accountability:** an audit log of who changed what in each organization.
+
+## Running it
+
+I run FlowPulse the way I run client infrastructure at my day job. It lives on a Proxmox host in an LXC container behind NGINX Proxy Manager, with deployment and staging written up as runbooks. Two scheduled jobs live inside the API. Every day at 08:00 UTC one generates recurring invoices, marks overdue ones, sends payment reminders and syncs connected Stripe accounts. Every hour the other emails any scheduled reports that are due. Invoice PDFs are rendered server-side by a headless Chromium.
+
+## What I'd do next
+
+The honest gap is automated testing. FlowPulse has no test suite or CI pipeline yet, which is affordable with one developer and a small user base and not affordable beyond that. Next come integration tests around tenancy, plan gates and billing webhooks, the three places where a regression costs real money, run on every push.

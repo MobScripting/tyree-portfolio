@@ -50,11 +50,11 @@ export const featured: FeaturedProject[] = [
       },
       {
         title: "Billing that enforces itself",
-        body: "Stripe subscriptions and webhooks drive Free, Starter and Professional plans. Feature gates and limits live in one place, and an expired 14-day trial drops the workspace to read-only.",
+        body: "Stripe subscriptions and webhooks drive Free, Starter and Professional plans. Plan limits live in one table, and an expired trial blocks new records until the workspace subscribes. Paying workspaces are never blocked.",
       },
       {
         title: "Security a finance team would ask for",
-        body: "SAML single sign-on, TOTP two-factor login with QR enrollment, refresh-token rotation, rate limiting, hardened HTTP headers and schema-validated input.",
+        body: "SAML single sign-on, TOTP two-factor login with QR enrollment, refresh-token rotation, rate limiting, hardened HTTP headers and Zod input validation.",
       },
       {
         title: "Shipped and operated by me",
@@ -88,7 +88,7 @@ export const featured: FeaturedProject[] = [
     stats: [
       { value: "5", label: "PowerShell automations" },
       { value: "7", label: "data models" },
-      { value: "1", label: "click to install as a Windows service" },
+      { value: "1", label: "installer from bare server to running app" },
     ],
     beats: [
       {
@@ -101,7 +101,7 @@ export const featured: FeaturedProject[] = [
       },
       {
         title: "Live progress, full trail",
-        body: "Bulk jobs stream progress to the browser over Server-Sent Events. Outgoing webhooks notify other systems, and every action lands in an audit log.",
+        body: "Bulk jobs run in one PowerShell process per batch and stream progress to the browser over Server-Sent Events. Outgoing webhooks notify other systems, and every action lands in an audit log.",
       },
     ],
     stack: [

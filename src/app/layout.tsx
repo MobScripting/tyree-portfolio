@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { profile } from "@/content/profile";
-import { StageLoader } from "@/components/StageLoader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,7 +45,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-svh">
         {children}
-        <StageLoader />
         <Analytics />
       </body>
     </html>

@@ -34,7 +34,9 @@ Personal portfolio for Tyree Chappell, aimed at full-stack/SaaS and AI/LLM engin
 - `src/scene/` is the Stage. Empty `[data-stage-slot="<id>"]` divs in the DOM reserve space, and `Stage.tsx` mounts one Device per slot, locked to that slot's on-screen box every frame (layout owns placement). The pose (tilt, turn, lid) interpolates enter, rest, exit across the slot's scroll progress, from `keyframes.ts`. Rendering is `frameloop="demand"`: scroll and resize invalidate, and Devices keep invalidating only while settling. Materials are unlit (a canvas-painted matcap in `matcap.ts`, screens in `screens.ts`). Do not add an Environment, lights or PBR without re-measuring blocking time on software GL: the environment bake alone cost about 2.9s.
 - Stage gating: an inline head script sets `html[data-stage="on"]` when the WebGL2 API exists. CSS shows slots only in that state, so no-JS and no-GPU visitors get a closed-up text layout. `StageLoader` mounts the Stage at idle time and turns it off again if context creation throws. Reduced motion snaps poses and skips Lenis and the lid intro.
 - Dev-server caveat: Turbopack's dev server once served a stale `globals.css` chunk (missing the slot rules). Verify CSS-dependent behavior on `next build` + `next start`, or restart dev.
-- Planned (see tickets): `/work/[slug]` MDX case studies, `/resume` print page with Playwright PDF output, and the Assistant API route.
+- `/work/[slug]` renders case studies. Header, stats, stack and the walkthrough CTA come from `projects.ts`; the body is `src/content/case-studies/<slug>.mdx`, registered in the page's `studies` map. MDX elements are styled in `src/mdx-components.tsx`, which also provides `<Architecture>` (an HTML diagram, kept in the DOM per ADR 0001). Cache Components forbids `dynamicParams`, so unknown slugs call `notFound()`.
+- `StageLoader` mounts from the home page, not the layout: other routes have no slots.
+- Planned (see tickets): `/resume` print page with Playwright PDF output, and the Assistant API route.
 
 ## Constraints
 

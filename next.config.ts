@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -14,4 +15,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Case studies are MDX modules imported by /work/[slug]; no MDX pages or plugins.
+export default createMDX({})(nextConfig);

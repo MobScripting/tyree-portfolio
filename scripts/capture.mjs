@@ -42,4 +42,21 @@ for (const [name, width, height] of [["desktop", 1440, 900], ["mobile", 390, 844
 const { page, errors } = await shoot("intro", 1440, 900, "no-preference");
 await page.screenshot({ path: `${out}/desktop-intro.png` });
 console.log("intro", { errors });
+await page.close();
+
+// Case study pages: full page at both widths.
+for (const route of ["/work/flowpulse", "/work/ad-manager"]) {
+  for (const [name, width, height] of [["desktop", 1440, 900], ["mobile", 390, 844]]) {
+    const p = await browser.newPage({ viewport: { width, height }, reducedMotion: "reduce" });
+    const errs = [];
+    p.on("pageerror", (e) => errs.push(e.message));
+    p.on("console", (m) => m.type() === "error" && errs.push(m.text()));
+    const res = await p.goto(base + route, { waitUntil: "networkidle" });
+    const slug = route.split("/").pop();
+    await p.screenshot({ path: `${out}/${name}-case-${slug}.png`, fullPage: true });
+    const overflow = await p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+    console.log(route, name, { status: res?.status(), overflow, errors: errs });
+    await p.close();
+  }
+}
 await browser.close();

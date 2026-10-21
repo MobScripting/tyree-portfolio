@@ -1,11 +1,12 @@
+import Link from "next/link";
 import { profile } from "@/content/profile";
 import { featured, lab, type FeaturedProject } from "@/content/projects";
 import { experience } from "@/content/experience";
 import { CopyEmail } from "./CopyEmail";
 
-const shell = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
+export const shell = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
 
-function Pill({
+export function Pill({
   href,
   children,
   primary = false,
@@ -14,8 +15,9 @@ function Pill({
   children: React.ReactNode;
   primary?: boolean;
 }) {
+  const Tag = href.startsWith("/") ? Link : "a";
   return (
-    <a
+    <Tag
       href={href}
       className={
         "inline-flex items-center rounded-full px-6 py-3 text-[17px] font-medium no-underline transition-[background-color,transform] duration-200 ease-out-expo active:scale-[0.97] " +
@@ -25,7 +27,7 @@ function Pill({
       }
     >
       {children}
-    </a>
+    </Tag>
   );
 }
 
@@ -36,20 +38,20 @@ export function Nav() {
         aria-label="Primary"
         className={`${shell} flex h-14 items-center justify-between text-[14px]`}
       >
-        <a href="#top" className="font-semibold tracking-tight text-ink no-underline">
+        <Link href="/" className="font-semibold tracking-tight text-ink no-underline">
           {profile.name}
-        </a>
+        </Link>
         <ul className="flex items-center gap-5 text-ink-muted sm:gap-7">
           {[
-            ["#work", "Work"],
-            ["#ai", "AI"],
-            ["#experience", "Experience"],
-            ["#contact", "Contact"],
+            ["/#work", "Work"],
+            ["/#ai", "AI"],
+            ["/#experience", "Experience"],
+            ["/#contact", "Contact"],
           ].map(([href, label]) => (
             <li key={href}>
-              <a href={href} className="no-underline transition-colors hover:text-ink">
+              <Link href={href} className="no-underline transition-colors hover:text-ink">
                 {label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -117,6 +119,22 @@ export function Proof() {
   );
 }
 
+export function ProjectStats({ project }: { project: FeaturedProject }) {
+  return (
+    <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-hairline pt-6">
+      {project.stats.map((s) => (
+        <div key={s.label}>
+          <dt className="sr-only">{s.label}</dt>
+          <dd>
+            <span className="tabular block font-mono text-[22px] text-ink">{s.value}</span>
+            <span className="text-[13px] text-ink-muted">{s.label}</span>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 function Project({ project }: { project: FeaturedProject }) {
   return (
     <section
@@ -147,25 +165,20 @@ function Project({ project }: { project: FeaturedProject }) {
           <span aria-hidden className="size-1.5 rounded-full bg-accent-bright" />
           {project.status}
         </p>
-        <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-hairline pt-6">
-          {project.stats.map((s) => (
-            <div key={s.label}>
-              <dt className="sr-only">{s.label}</dt>
-              <dd>
-                <span className="tabular block font-mono text-[22px] text-ink">{s.value}</span>
-                <span className="text-[13px] text-ink-muted">{s.label}</span>
-              </dd>
-            </div>
-          ))}
-        </dl>
-        {project.link && (
-          <a
-            href={project.link.href}
-            className="mt-8 inline-block text-[15px] font-medium text-accent-ink hover:underline"
-          >
-            {project.link.label}
-          </a>
-        )}
+        <ProjectStats project={project} />
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Pill href={`/work/${project.slug}`} primary>
+            Read the case study
+          </Pill>
+          {project.link && (
+            <a
+              href={project.link.href}
+              className="text-[15px] font-medium text-accent-ink hover:underline"
+            >
+              {project.link.label}
+            </a>
+          )}
+        </div>
       </div>
 
       <div>

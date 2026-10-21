@@ -1,0 +1,64 @@
+{/* Every claim here was checked against f:\saasbusiness\Autocreate AD Account. Sanitized: no real names, domains or OUs. */}
+
+## The problem
+
+Creating an Active Directory account by hand means the same ten steps every time: the right OU, the right groups, the naming convention, a temporary password, and a check that the username isn't already taken. A new hire can need a dozen of them. As a field engineer I did that work by hand, so I built the tool I wanted: a web app where a technician picks a role template, or drops in a spreadsheet, and the accounts appear.
+
+## Architecture
+
+<Architecture
+  title="From a click to a directory object"
+  path={[
+    { name: "Browser", detail: "Technician signed in through NextAuth" },
+    {
+      name: "Next.js 14 app",
+      detail: "API routes, templates, jobs, live progress",
+      services: ["SQLite (Prisma)", "Outgoing webhooks", "Audit log"],
+    },
+    { name: "powershell.exe", detail: "One process per batch, JSON in and out" },
+    { name: "Active Directory", detail: "ActiveDirectory module from RSAT" },
+  ]}
+/>
+
+The app runs on a Windows server inside the domain. An installer registers it as an auto-starting scheduled task, under SYSTEM or a delegated service account.
+
+## Decisions worth explaining
+
+### JSON over stdin, not command-line arguments
+
+Distinguished names have commas, OUs have spaces, and people have apostrophes in their names. Building a PowerShell command line from those is an escaping bug waiting to happen. The app writes the whole batch to the script's standard input as JSON instead:
+
+```ts
+const ps = spawn("powershell.exe", [
+  "-NonInteractive", "-NoProfile",
+  "-ExecutionPolicy", "Bypass",
+  "-File", PS_BATCH_SCRIPT,
+]);
+// JSON on stdin: no Windows command-line escaping for
+// spaces in OUs, commas in DNs or quotes in names.
+ps.stdin.write(JSON.stringify(payloads), "utf8");
+ps.stdin.end();
+```
+
+The script logs as it works and prints its results as a final JSON line. The server parses that line back into typed results. If the script dies, every user in the batch is marked failed with the captured error, so nothing is silently lost.
+
+### One PowerShell process per batch
+
+Starting PowerShell and loading the ActiveDirectory module is the slow part of creating a user. A bulk import loads it once for the whole batch instead of once per account.
+
+### Check duplicates against the directory
+
+A duplicate check looks up every candidate in AD by `sAMAccountName` and by email address, so a returning employee or a typo-duplicate in a spreadsheet can be caught before any account exists.
+
+### Make progress visible
+
+Bulk jobs stream their status to the browser over Server-Sent Events, so a technician watches the job move instead of staring at a spinner. Finished jobs can notify other systems through outgoing webhooks, and every action is written to an audit log.
+
+## Installing it
+
+The target user is an IT team, not a developer, so installation is one script. It checks for Node.js and installs it if missing, installs the RSAT Active Directory tools, builds the app, prepares the database, opens the firewall port, and registers the auto-start task with restart-on-failure. Matching scripts update and uninstall it.
+
+## What I'd do next
+
+- **Signed webhooks:** outgoing webhooks are not signed yet. An HMAC signature header is the first change before connecting them to anything sensitive.
+- **Tests:** the PowerShell bridge has a clear contract (JSON in, one JSON line out), which makes it the natural first seam for tests against a mock script.
