@@ -129,5 +129,6 @@ export const lab: LabItem[] = [
     kind: "Client website",
     body: "A marketing site for a licensed lawn care company in Augusta, GA. Search-optimized pages, sitemap and structured metadata, shipped as a Docker container behind nginx.",
     tracks: ["fullstack"],
+    link: { href: "https://www.lawntitans.org", label: "Visit lawntitans.org" },
   },
 ];

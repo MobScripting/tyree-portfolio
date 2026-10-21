@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   },
   description: profile.summary,
   authors: [{ name: profile.name }],
+  metadataBase: new URL(profile.links.site),
+  openGraph: { type: "website", siteName: profile.name, locale: "en_US" },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {

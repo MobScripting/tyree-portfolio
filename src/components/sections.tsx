@@ -342,6 +342,14 @@ export function Lab() {
               <p className="mt-4 max-w-[58ch] text-[16px] leading-relaxed text-ink-muted text-pretty">
                 {item.body}
               </p>
+              {item.link && (
+                <a
+                  href={item.link.href}
+                  className="mt-4 inline-block text-[15px] font-medium text-accent-ink hover:underline"
+                >
+                  {item.link.label}
+                </a>
+              )}
             </li>
           ))}
         </ul>

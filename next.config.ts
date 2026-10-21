@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  // OG images read Geist TTFs at request time (src/lib/og.tsx); make sure the functions ship them.
+  outputFileTracingIncludes: {
+    "/opengraph-image": ["./node_modules/geist/dist/fonts/geist-sans/Geist-{SemiBold,Regular}.ttf"],
+    "/work/**/opengraph-image": ["./node_modules/geist/dist/fonts/geist-sans/Geist-{SemiBold,Regular}.ttf"],
+  },
   turbopack: {
     rules: {
       "*.css": {
