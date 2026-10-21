@@ -4,7 +4,10 @@
 import { chromium } from "playwright";
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const variants = [["/resume", "public/Tyree-Chappell-Resume-FullStack.pdf"]];
+const variants = [
+  ["/resume", "public/Tyree-Chappell-Resume-FullStack.pdf"],
+  ["/resume/ai", "public/Tyree-Chappell-Resume-AI.pdf"],
+];
 
 const browser = await chromium.launch();
 for (const [route, out] of variants) {

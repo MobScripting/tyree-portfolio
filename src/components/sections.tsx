@@ -2,7 +2,7 @@ import Link from "next/link";
 import { profile } from "@/content/profile";
 import { featured, lab, type FeaturedProject } from "@/content/projects";
 import { experience } from "@/content/experience";
-import { resumePdf } from "@/content/resume";
+import { resumePdf, resumeRoute } from "@/content/resume";
 import { CopyEmail } from "./CopyEmail";
 
 export const shell = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
@@ -270,6 +270,9 @@ export function AiSection() {
             </li>
           ))}
         </ul>
+        <div className="mt-14">
+          <Pill href={resumeRoute.ai}>Read the AI resume</Pill>
+        </div>
       </div>
     </section>
   );
@@ -373,7 +376,8 @@ export function Contact() {
         </a>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <CopyEmail email={profile.email} />
-          <Pill href={resumePdf.fullstack}>Download resume</Pill>
+          <Pill href={resumePdf.fullstack}>Full-stack resume</Pill>
+          <Pill href={resumePdf.ai}>AI resume</Pill>
           <Pill href={profile.links.github}>GitHub</Pill>
           {profile.links.linkedin && <Pill href={profile.links.linkedin}>LinkedIn</Pill>}
         </div>

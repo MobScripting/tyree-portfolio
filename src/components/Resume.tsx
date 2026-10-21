@@ -1,7 +1,14 @@
 import { profile, type Track } from "@/content/profile";
 import { experience } from "@/content/experience";
 import { featured } from "@/content/projects";
-import { education, resumeProjects, resumeTitle, skills } from "@/content/resume";
+import {
+  education,
+  projectOrder,
+  resumeProjects,
+  resumeSummary,
+  resumeTitle,
+  skills,
+} from "@/content/resume";
 
 // The printed resume: one US Letter sheet, dark ink on white, real text for ATS parsers.
 // Track tags choose which bullets each variant includes (docs/adr/0002).
@@ -30,7 +37,7 @@ export function Resume({ track }: { track: Track }) {
   const pick = <T extends { tracks: Track[] }>(xs: T[]) => xs.filter((x) => x.tracks.includes(track));
 
   return (
-    <article className="resume-sheet mx-auto w-full max-w-[8.5in] bg-white px-6 py-8 text-[12px] sm:px-[0.5in] sm:py-[0.45in] leading-[1.35] text-[#3a3a3c] shadow-[0_24px_60px_rgba(0,0,0,0.5)] [font-feature-settings:'tnum']">
+    <article className="resume-sheet mx-auto w-full max-w-[8.5in] bg-white px-6 py-8 text-[12px] sm:px-[0.5in] sm:py-[0.4in] leading-[1.35] text-[#3a3a3c] shadow-[0_24px_60px_rgba(0,0,0,0.5)] [font-feature-settings:'tnum']">
       <header>
         <h1 className="text-[26px] leading-none font-semibold tracking-[-0.02em] text-[#1d1d1f]">{profile.name}</h1>
         <p className="mt-1.5 text-[14px] font-medium text-[#1d1d1f]">{resumeTitle[track]}</p>
@@ -51,11 +58,13 @@ export function Resume({ track }: { track: Track }) {
       </header>
 
       <Heading>Summary</Heading>
-      <p className="mt-1.5">{profile.summary}</p>
+      <p className="mt-1.5">{resumeSummary[track]}</p>
 
       <Heading>Projects</Heading>
-      {resumeProjects.map((p) => {
-        const name = featured.find((f) => f.slug === p.slug)?.name ?? p.slug;
+      {projectOrder[track].map((slug) => {
+        const p = resumeProjects.find((r) => r.slug === slug);
+        if (!p) throw new Error(`resume: no project "${slug}"`);
+        const name = p.name ?? featured.find((f) => f.slug === p.slug)?.name ?? p.slug;
         return (
           <section key={p.slug} className="mt-2.5 break-inside-avoid">
             <h3 className="flex flex-wrap items-baseline justify-between gap-x-3">
@@ -71,7 +80,7 @@ export function Resume({ track }: { track: Track }) {
       })}
 
       <Heading>Experience</Heading>
-      {experience.map((job) => {
+      {experience.filter((job) => !job.tracks || job.tracks.includes(track)).map((job) => {
         const bullets = pick(job.bullets).map((b) => b.text);
         return (
           <section key={job.company} className="mt-2.5 break-inside-avoid">
@@ -94,7 +103,7 @@ export function Resume({ track }: { track: Track }) {
 
       <Heading>Skills</Heading>
       <dl className="mt-1.5 grid grid-cols-[7.5em_1fr] gap-x-3 gap-y-[3px]">
-        {skills.map((s) => (
+        {pick(skills).map((s) => (
           <div key={s.label} className="contents">
             <dt className="font-semibold text-[#1d1d1f]">{s.label}</dt>
             <dd>{s.items.join(", ")}</dd>

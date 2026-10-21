@@ -10,6 +10,8 @@ export type Job = {
   place: string;
   start: string;
   end: string;
+  // Resume variants that list this job; defaults to both. The site lists every job.
+  tracks?: Track[];
   bullets: Bullet[];
 };
 
@@ -68,6 +70,7 @@ export const experience: Job[] = [
     place: "Bristol, VA",
     start: "May 2019",
     end: "Mar 2022",
+    tracks: ["fullstack"],
     bullets: [],
   },
 ];
