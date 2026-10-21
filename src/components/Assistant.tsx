@@ -48,6 +48,7 @@ export function Assistant() {
   const [model, setModel] = useState<string | null>(null);
   const engine = useRef<WebWorkerMLCEngine | null>(null);
   const busy = useRef(false);
+  const loading = useRef(false);
   const nextId = useRef(0);
   const trigger = useRef<HTMLButtonElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -87,7 +88,10 @@ export function Assistant() {
   }
 
   async function load(m = model) {
-    if (!m || engine.current) return;
+    // One load at a time: the cached-model auto-load and a Load click can otherwise race
+    // and start two engines on the same GPU.
+    if (!m || engine.current || loading.current) return;
+    loading.current = true;
     setStatus("loading");
     try {
       const { loadEngine } = await import("@/assistant/engine");
@@ -98,6 +102,8 @@ export function Assistant() {
       console.error("[Ask Tyree] model failed to load", err);
       setStatus("error");
       setAnnounce("The assistant couldn't load. Search still works.");
+    } finally {
+      loading.current = false;
     }
   }
 
@@ -120,7 +126,8 @@ export function Assistant() {
           text += delta;
           patch({ text });
         }
-      } catch {
+      } catch (err) {
+        console.error("[Ask Tyree] answer generation failed", err);
         text = "Something went wrong generating an answer. The sources below are what the site says.";
         patch({ text });
       }
