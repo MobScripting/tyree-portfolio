@@ -19,6 +19,7 @@ export type SlotDef = {
 
 const fp = (name: string) => `/footage/flowpulse/${name}`;
 const ad = (name: string) => `/footage/ad-manager/${name}`;
+const ask = (name: string) => `/footage/ask-tyree/${name}`;
 
 export const slots: Record<string, SlotDef> = {
   hero: {
@@ -35,6 +36,13 @@ export const slots: Record<string, SlotDef> = {
     enter: { rx: 0.5, ry: -0.95, lid: 1.2 },
     rest: { rx: 0.26, ry: -0.38, lid: 1.9 },
     exit: { rx: 0.2, ry: 0.15, lid: 1.9 },
+  },
+  ai: {
+    screen: "flowpulse",
+    stills: [ask("answer.jpg")],
+    enter: { rx: 0.5, ry: -0.8, lid: 1.3 },
+    rest: { rx: 0.24, ry: -0.3, lid: 1.9 },
+    exit: { rx: 0.2, ry: 0.1, lid: 1.9 },
   },
   "ad-manager": {
     screen: "ad",

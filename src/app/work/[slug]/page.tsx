@@ -9,6 +9,7 @@ import { Nav, Pill, ProjectStats, shell } from "@/components/sections";
 const studies = {
   flowpulse: () => import("@/content/case-studies/flowpulse.mdx"),
   "ad-manager": () => import("@/content/case-studies/ad-manager.mdx"),
+  "agentic-workflow": () => import("@/content/case-studies/agentic-workflow.mdx"),
 } as const;
 
 const find = (slug: string) => featured.find((p) => p.slug === slug);
@@ -82,8 +83,9 @@ export default async function CaseStudy({ params }: PageProps<"/work/[slug]">) {
               Want to see the code?
             </h2>
             <p className="mt-4 max-w-[56ch] text-[17px] leading-relaxed text-ink-muted text-pretty">
-              The repository is private. I&apos;m glad to walk you through it on a call: the schema,
-              the decisions above, and what I&apos;d change next.
+              {project.publicRepo
+                ? "The repository is public, decision records and tickets included. I'm also glad to walk you through it on a call."
+                : "The repository is private. I'm glad to walk you through it on a call: the schema, the decisions above, and what I'd change next."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Pill href={walkthrough} primary>

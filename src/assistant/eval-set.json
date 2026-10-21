@@ -18,5 +18,7 @@
   { "q": "Which programming languages does he know?", "expect": ["skills"], "mention": ["typescript"] },
   { "q": "Is he willing to relocate?", "expect": ["profile"], "mention": ["relocat"] },
   { "q": "What is his education?", "expect": ["education"], "mention": ["high school"] },
-  { "q": "Has he built websites for clients?", "expect": ["lab/lawn-titans-services"], "mention": ["lawn"] }
+  { "q": "Has he built websites for clients?", "expect": ["lab/lawn-titans-services"], "mention": ["lawn"] },
+  { "q": "How does the Ask Tyree assistant work?", "expect": ["work/agentic-workflow/ask-tyree"], "mention": ["retrieval"] },
+  { "q": "What mistakes did fact-checking catch while building the site?", "expect": ["work/agentic-workflow/what-the-loop-caught"], "mention": ["claim"] }
 ]

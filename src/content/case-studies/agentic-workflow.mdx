@@ -1,0 +1,57 @@
+{/* Every claim here is checkable in this repository: docs/adr, GLOSSARY.md, .scratch/portfolio/issues, src/assistant, scripts. */}
+
+## The problem
+
+An AI coding agent will happily write a portfolio. Left alone, it'll also invent a metric, repeat an overstated number from an old resume, and describe software the way it sounds rather than the way it is. For a site whose whole job is to be believed by a recruiter, that's the failure that matters. So the question wasn't whether agents could build it, but what process keeps them honest while they do.
+
+## The loop
+
+<Architecture
+  title="How a change moves from idea to production"
+  path={[
+    { name: "Interview", detail: "Rounds of questions until every decision is made" },
+    { name: "Decision records", detail: "ADRs, a glossary, a product brief" },
+    { name: "Tickets", detail: "Vertical slices with blocking edges and acceptance lists" },
+    { name: "Agent sessions", detail: "Built ticket by ticket in Claude Code", services: ["Agent skills", "Playwright", "Lighthouse"] },
+    { name: "Verify", detail: "Screenshots, evals, fact-checks against source repos" },
+  ]}
+/>
+
+### Requirements, interrogated
+
+Before any code, an agent interviewed me in seven rounds, one decision at a time: target roles, how deep the 3D should go, which projects to feature, what personal details may be public, how to frame an IT background for developer roles. Each answer shaped the next round's questions. The results live in a product brief, a 14-term glossary and six architecture decision records. Later sessions read those instead of re-deciding them.
+
+### Tickets with blocking edges
+
+The plan became 15 tickets. Each is a slice someone can demo, names the tickets that block it, and carries an acceptance checklist. Independent tickets, like capturing footage of two different apps, could run in parallel. Each ticket file collects notes on what changed and why, so a fresh session can pick up without the conversation that produced it.
+
+### Agents with real tools
+
+The agent doesn't just write code. It drives a headless browser to screenshot every page at desktop and phone widths, runs Lighthouse, renders the resume to PDF and refuses to save one that runs past a page or contains a phone number, and runs copies of my other apps with sample data to capture their screens. Skills give it repeatable procedures for interviewing, writing decision records, cutting tickets and reviewing design.
+
+## What the loop caught
+
+Every number on this site was checked against the source repository before it shipped. That check found seven claims that were wrong, all written in good faith from a first read of the code:
+
+- The AD Manager's PowerShell scripts were described as signed. They aren't.
+- "Every query is scoped to the organization" became "the API scopes its data access": 31 of 32 route modules do.
+- The AD installer was called a Windows service. It registers a scheduled task.
+- An expired FlowPulse trial was said to make a workspace read-only. It blocks new records.
+- Input validation was described as covering every write. It covers half the route modules.
+- The one unscoped route module was guessed to be the webhook endpoint. It's the public routes.
+- "Six years" of IT experience didn't match the dates on the resume. It's over four.
+
+The process also caught the agent's own engineering mistakes: a race in the answer eval that read each answer before it finished, a race that could start two model engines on one GPU, and a lint failure that slipped into one commit and was fixed in the next.
+
+## Ask Tyree
+
+The site's assistant is the same loop applied to an AI feature. There was no budget for a hosted model API, so it runs entirely in the visitor's browser: BM25 retrieval over the site's own content, then a small open model through WebLLM on the visitor's GPU, citing the passages it used. Without WebGPU it answers with the passages alone.
+
+Two evals keep it honest. A retrieval eval checks that, for each of 22 realistic questions, the passage that answers it is in the top four. It started at 85% and reached 100% after adding stemming and a title-coverage bonus. An answer eval drives the real panel in a browser and checks every answer cites a source and states the expected facts.
+
+The answer eval changed the design. Llama 3.2 1B, the smallest model, said things about my work that were false, such as that I'd never built a client website. A tighter prompt didn't fix it. Llama 3.2 3B passed 18 of the 20 questions then in the set, with every answer cited, and none of its answers were materially false when I read them. That costs visitors a bigger one-time download, about 1.8 GB instead of 700 MB, and it's the right trade for a tool whose job is to describe me accurately.
+
+## What I'd do next
+
+- **Harder questions:** I wrote the eval questions knowing the content. Real visitors will phrase things differently, so the next step is collecting anonymous question patterns, with consent, and adding them to the eval.
+- **Faithfulness scoring:** the answer eval checks keywords and citations. A second pass that verifies each sentence against its cited source would catch subtler errors than a keyword check can.

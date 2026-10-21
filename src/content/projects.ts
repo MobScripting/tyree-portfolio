@@ -20,6 +20,10 @@ export type FeaturedProject = {
   link?: { href: string; label: string };
   // Caption under the section's Device: what its screens show.
   footageNote: string;
+  // Where the home page shows it: the Work list (default) or the AI section.
+  section?: "work" | "ai";
+  // Whether the code is public; the case-study page words its walkthrough offer accordingly.
+  publicRepo?: boolean;
 };
 
 export type LabItem = {
@@ -118,6 +122,27 @@ export const featured: FeaturedProject[] = [
       "Tailwind",
     ],
     footageNote: "Sample data on a fictional contoso.local domain",
+  },
+  {
+    slug: "agentic-workflow",
+    name: "Building this site with agents",
+    tagline: "How I plan, build and verify software with AI agents in the loop.",
+    summary:
+      "This portfolio was planned in recorded interview rounds, cut into tickets with blocking edges, and built in Claude Code agent sessions, with its own eval and fact-checking loop. It includes Ask Tyree, an on-device RAG assistant.",
+    tracks: ["ai"],
+    status: "This site, built with Claude Code",
+    section: "ai",
+    publicRepo: true,
+    stats: [
+      { value: "15", label: "tickets with blocking edges" },
+      { value: "6", label: "architecture decision records" },
+      { value: "22", label: "assistant eval questions" },
+      { value: "7", label: "wrong claims caught and fixed" },
+    ],
+    beats: [],
+    stack: ["Claude Code", "Agent skills", "MCP", "Playwright", "Lighthouse", "WebLLM", "Llama 3.2", "Next.js"],
+    link: { href: "https://github.com/MobScripting/tyree-portfolio", label: "Read the repository" },
+    footageNote: "Ask Tyree answering on this site: real output from the on-device model",
   },
 ];
 

@@ -5,7 +5,7 @@ import { chromium } from "playwright";
 
 const base = process.argv[2] ?? "http://localhost:3000";
 const out = ".impeccable/review";
-const slots = ["flowpulse", "ad-manager"];
+const slots = ["flowpulse", "ai", "ad-manager"];
 // SwiftShader gives the headless shell a software WebGL context.
 const browser = await chromium.launch({ args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
 
@@ -45,7 +45,7 @@ console.log("intro", { errors });
 await page.close();
 
 // Case study pages: full page at both widths.
-for (const route of ["/work/flowpulse", "/work/ad-manager"]) {
+for (const route of ["/work/flowpulse", "/work/ad-manager", "/work/agentic-workflow"]) {
   for (const [name, width, height] of [["desktop", 1440, 900], ["mobile", 390, 844]]) {
     const p = await browser.newPage({ viewport: { width, height }, reducedMotion: "reduce" });
     const errs = [];

@@ -4,12 +4,13 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import type { WebWorkerMLCEngine } from "@mlc-ai/web-llm";
 import type { Hit } from "@/assistant/retrieve";
 import { DOWNLOAD_LABEL } from "@/assistant/engine";
+import { OPEN_ASK_TYREE } from "./AskTyreeButton";
 
 // "Ask Tyree" (ticket 13, docs/adr/0006): retrieval over the site's own content, answered by a
 // small model that runs on the visitor's GPU. Nothing downloads until the visitor opts in, and
 // without WebGPU the same retrieval still answers with the matching passages and links.
 
-type Status = "idle" | "checking" | "unsupported" | "loading" | "ready" | "error";
+type Status = "idle" | "checking" | "unsupported" | "loading" | "ready" | "error" | "lost";
 type Turn = { id: number; q: string; hits: Hit[]; text: string; done: boolean };
 
 let retrieverPromise: Promise<(q: string, k?: number) => Hit[]> | null = null;
@@ -82,6 +83,13 @@ export function Assistant() {
     log.current?.scrollTo({ top: log.current.scrollHeight });
   }, [turns]);
 
+  // Other buttons on the page (the AI section's "Ask Tyree") open the panel with this event.
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener(OPEN_ASK_TYREE, show);
+    return () => window.removeEventListener(OPEN_ASK_TYREE, show);
+  }, []);
+
   function close() {
     setOpen(false);
     trigger.current?.focus();
@@ -128,7 +136,11 @@ export function Assistant() {
         }
       } catch (err) {
         console.error("[Ask Tyree] answer generation failed", err);
-        text = "Something went wrong generating an answer. The sources below are what the site says.";
+        // A lost GPU device (usually out of memory) kills the engine for good. Stop using it, so
+        // later questions answer with passages instead of failing one by one.
+        engine.current = null;
+        setStatus("lost");
+        text = "The AI model stopped. Here's what the site says instead.";
         patch({ text });
       }
     }
@@ -234,6 +246,8 @@ export function Assistant() {
                   </div>
                 )}
                 {status === "error" && "The model couldn't load. Search still works."}
+                {status === "lost" &&
+                  "The AI model stopped, usually because the GPU ran out of memory. Answers now show the matching passages."}
               </div>
             )}
             <form onSubmit={ask} className="flex gap-2">

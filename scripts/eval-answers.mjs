@@ -27,7 +27,8 @@ try {
   const page = await ctx.newPage();
   if (model) await page.addInitScript((m) => (globalThis.__ASK_TYREE_MODEL = m), model);
   await page.goto(base, { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Ask Tyree" }).click();
+  // The floating trigger (it controls the panel); the AI section has a second "Ask Tyree" button.
+  await page.locator("button[aria-controls]", { hasText: "Ask Tyree" }).click();
   const loadButton = page.getByRole("button", { name: /Load the AI model/ });
   await loadButton.waitFor({ timeout: 30000 });
   const t0 = Date.now();

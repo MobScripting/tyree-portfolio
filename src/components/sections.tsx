@@ -5,6 +5,8 @@ import { experience } from "@/content/experience";
 import { resumePdf, resumeRoute } from "@/content/resume";
 import { practices } from "@/content/ai";
 import { CopyEmail } from "./CopyEmail";
+import { AskTyreeButton } from "./AskTyreeButton";
+import { pillClass } from "./pill";
 
 export const shell = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
 
@@ -18,17 +20,9 @@ export function Pill({
   primary?: boolean;
 }) {
   // Routes go through Link; files like the resume PDF need a plain anchor.
-  const Tag = href.startsWith("/") && !/.w+$/.test(href) ? Link : "a";
+  const Tag = href.startsWith("/") && !/\.\w+$/.test(href) ? Link : "a";
   return (
-    <Tag
-      href={href}
-      className={
-        "inline-flex items-center rounded-full px-6 py-3 text-[17px] font-medium no-underline transition-[background-color,transform] duration-200 ease-out-expo active:scale-[0.97] " +
-        (primary
-          ? "bg-accent text-white hover:bg-accent-bright"
-          : "bg-graphite text-ink hover:bg-hairline")
-      }
-    >
+    <Tag href={href} className={pillClass(primary)}>
       {children}
     </Tag>
   );
@@ -230,21 +224,20 @@ function Project({ project }: { project: FeaturedProject }) {
 export function Work() {
   return (
     <div id="work">
-      {featured.map((p) => (
-        <Project key={p.slug} project={p} />
-      ))}
+      {featured
+        .filter((p) => (p.section ?? "work") === "work")
+        .map((p) => (
+          <Project key={p.slug} project={p} />
+        ))}
     </div>
   );
 }
 
 
 export function AiSection() {
+  const study = featured.find((p) => p.slug === "agentic-workflow");
   return (
-    <section
-      id="ai"
-      aria-labelledby="ai-title"
-      className="border-t border-hairline bg-stage-raised"
-    >
+    <section id="ai" aria-labelledby="ai-title" className="border-t border-hairline">
       <div className={`${shell} py-28 lg:py-40`}>
         <h2
           id="ai-title"
@@ -253,11 +246,23 @@ export function AiSection() {
           I build with AI agents in the loop.
         </h2>
         <p className="mt-6 max-w-[60ch] text-[clamp(1.0625rem,1.6vw,1.25rem)] leading-relaxed text-ink-muted text-pretty">
-          Agents work best with a process, not a prompt. This site was built that way: planned in
-          recorded interview rounds, tracked as fifteen tickets, and built by agents following the
-          decision records in its repository.
+          Agents work best with a process, not a prompt. This site was planned in recorded interview
+          rounds, tracked as fifteen tickets, and built by agents following its decision records.
+          Its assistant, Ask Tyree, answers from the site&apos;s own content with a model that runs
+          on your device.
         </p>
-        <ul className="mt-16 grid gap-12 md:grid-cols-3 md:gap-10">
+        <div
+          data-stage-slot="ai"
+          aria-hidden
+          className="mx-auto mt-16 h-[clamp(240px,min(62svh,80vw),640px)] w-full max-w-[1000px]"
+        />
+        {study && <StageCaption className="mt-6 lg:mt-10">{study.footageNote}</StageCaption>}
+        <div className="mt-10 flex flex-wrap gap-3">
+          <AskTyreeButton primary>Ask Tyree</AskTyreeButton>
+          {study && <Pill href={`/work/${study.slug}`}>How this site was built</Pill>}
+          <Pill href={resumeRoute.ai}>AI resume</Pill>
+        </div>
+        <ul className="mt-20 grid gap-12 md:grid-cols-3 md:gap-10">
           {practices.map((p) => (
             <li key={p.title} className="border-t border-hairline pt-6">
               <h3 className="text-[21px] leading-tight font-semibold tracking-[-0.015em]">
@@ -269,9 +274,6 @@ export function AiSection() {
             </li>
           ))}
         </ul>
-        <div className="mt-14">
-          <Pill href={resumeRoute.ai}>Read the AI resume</Pill>
-        </div>
       </div>
     </section>
   );

@@ -2,8 +2,8 @@ import { profile, type Track } from "./profile";
 
 // Resume-only content. Profile, experience and project names come from their own modules
 // (docs/adr/0002); this file holds what only the printed resume says.
-// Wording approved by the user on 2026-10-21: full-stack (ticket 07), AI (ticket 15).
-// AI claims stop at what has shipped: no RAG, evals or LLM APIs until the Assistant exists.
+// Wording approved by the user on 2026-10-21: full-stack (ticket 07), AI (tickets 15 and 14).
+// AI claims stop at what has shipped: RAG and evals are earned by Ask Tyree (ADR 0006); no hosted LLM APIs.
 
 export type ResumeProject = {
   slug: string;
@@ -65,11 +65,11 @@ export const resumeProjects: ResumeProject[] = [
     meta: "Next.js 16, react-three-fiber",
     bullets: [
       {
-        text: "Planned in recorded interview rounds that became architecture decision records, a domain glossary and 15 tickets with blocking edges, then built ticket by ticket in Claude Code agent sessions.",
+        text: "Planned in recorded interview rounds that became decision records, a glossary and 15 tickets with blocking edges, then built ticket by ticket in Claude Code sessions, with every claim fact-checked against its source repo.",
         tracks: ai,
       },
       {
-        text: "Verification is part of the loop: Playwright captures, Lighthouse runs, a PDF check that fails on overflow or a phone number, and every claim fact-checked against its source repo before publishing.",
+        text: "Built Ask Tyree, an on-device RAG assistant: BM25 retrieval over the site's content and Llama 3.2 3B running in the visitor's browser through WebLLM, with cited answers. Chose the model with a 20-question eval after a 1B model stated false facts.",
         tracks: ai,
       },
     ],
@@ -136,7 +136,9 @@ export const skills: { label: string; items: string[]; tracks: Track[] }[] = [
       "Claude Code",
       "Model Context Protocol (MCP)",
       "agent skills and subagents",
-      "ticket-driven agent workflows",
+      "RAG",
+      "WebLLM",
+      "LLM evals",
     ],
   },
   { label: "Languages", tracks: fullstack, items: ["TypeScript", "JavaScript", "SQL", "PowerShell", "C#", "Lua"] },
