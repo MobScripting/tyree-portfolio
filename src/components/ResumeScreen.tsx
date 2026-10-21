@@ -9,7 +9,7 @@ import { profile, type Track } from "@/content/profile";
 export function ResumeScreen({ track }: { track: Track }) {
   const tracks = Object.keys(resumeRoute) as Track[];
   return (
-    <main className="resume-page px-4 py-10 sm:py-16">
+    <main id="main" className="resume-page px-4 py-10 sm:py-16">
       <div className="resume-toolbar mx-auto mb-8 flex max-w-[8.5in] flex-wrap items-center justify-between gap-4">
         <Link href="/" className="text-[14px] text-ink-muted no-underline hover:text-ink">
           {profile.name}

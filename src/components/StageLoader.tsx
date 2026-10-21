@@ -3,11 +3,12 @@
 import dynamic from "next/dynamic";
 import { Component, useEffect, useState, type ReactNode } from "react";
 import Lenis from "lenis";
+import { setLenis } from "@/lib/scroll";
 
 const Stage = dynamic(() => import("@/scene/Stage"), { ssr: false });
 
 // The head probe only checks for the WebGL API. If the real context fails (blocked GPU,
-// driver blocklist), switch the stage off so the slots collapse and the page reads as text.
+// driver blocklist), switch the stage off so the slots collapse and the screenshot posters show.
 class StageBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() {
@@ -34,8 +35,10 @@ export function StageLoader() {
     const cancel = () => (idle ? cancelIdleCallback(id) : clearTimeout(id));
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return cancel;
     const lenis = new Lenis({ autoRaf: true, anchors: true });
+    setLenis(lenis);
     return () => {
       cancel();
+      setLenis(null);
       lenis.destroy();
     };
   }, []);

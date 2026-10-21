@@ -13,7 +13,14 @@ const STOP = new Set(
 // Light suffix stemming so "installed", "installing" and "installer" all meet at "install".
 // The minimum stem length keeps short words ("user", "uses") from collapsing.
 const SUFFIXES = ["ations", "ation", "ings", "ing", "ers", "er", "ed", "es", "s"];
+// Common irregular past forms, which suffix rules can't reach ("caught" should meet "catch").
+const IRREGULAR: Record<string, string> = {
+  caught: "catch", built: "build", found: "find", made: "make", wrote: "write", written: "write",
+  ran: "run", chose: "choose", chosen: "choose", taught: "teach", bought: "buy", brought: "bring",
+  thought: "think", sent: "send", spent: "spend", kept: "keep", led: "lead",
+};
 function stem(w: string): string {
+  if (IRREGULAR[w]) return IRREGULAR[w];
   if (w.endsWith("ss")) return w;
   for (const suf of SUFFIXES) if (w.endsWith(suf) && w.length - suf.length >= 4) return w.slice(0, -suf.length);
   return w;

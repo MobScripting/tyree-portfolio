@@ -36,7 +36,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(person).replace(/</g, "\\u003c") }}
       />
       <Nav />
-      <main>
+      <main id="main">
         <Hero />
         <Proof />
         <Work />

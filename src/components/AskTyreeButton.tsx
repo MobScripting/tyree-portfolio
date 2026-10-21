@@ -8,7 +8,7 @@ export const OPEN_ASK_TYREE = "ask-tyree:open";
 
 export function AskTyreeButton({ children, primary = false }: { children: React.ReactNode; primary?: boolean }) {
   return (
-    <button type="button" onClick={() => window.dispatchEvent(new Event(OPEN_ASK_TYREE))} className={pillClass(primary)}>
+    <button type="button" data-ask-tyree onClick={() => window.dispatchEvent(new Event(OPEN_ASK_TYREE))} className={pillClass(primary)}>
       {children}
     </button>
   );

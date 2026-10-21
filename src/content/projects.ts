@@ -24,6 +24,10 @@ export type FeaturedProject = {
   section?: "work" | "ai";
   // Whether the code is public; the case-study page words its walkthrough offer accordingly.
   publicRepo?: boolean;
+  // Live in production: the only status that earns the accent color.
+  live?: boolean;
+  // Still shown in place of the 3D Device when the Stage is off.
+  poster: string;
 };
 
 export type LabItem = {
@@ -83,6 +87,8 @@ export const featured: FeaturedProject[] = [
     ],
     link: { href: "https://flowpulseapp.org", label: "Visit flowpulseapp.org" },
     footageNote: "FlowPulse demo workspace, sample data",
+    live: true,
+    poster: "/footage/flowpulse/reports.jpg",
   },
   {
     slug: "ad-manager",
@@ -122,6 +128,7 @@ export const featured: FeaturedProject[] = [
       "Tailwind",
     ],
     footageNote: "Sample data on a fictional contoso.local domain",
+    poster: "/footage/ad-manager/jobs.jpg",
   },
   {
     slug: "agentic-workflow",
@@ -143,6 +150,7 @@ export const featured: FeaturedProject[] = [
     stack: ["Claude Code", "Agent skills", "MCP", "Playwright", "Lighthouse", "WebLLM", "Llama 3.2", "Next.js"],
     link: { href: "https://github.com/MobScripting/tyree-portfolio", label: "Read the repository" },
     footageNote: "Ask Tyree answering on this site: real output from the on-device model",
+    poster: "/footage/ask-tyree/answer.jpg",
   },
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { pillClass } from "./pill";
 
 export function CopyEmail({ email }: { email: string }) {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
@@ -26,7 +27,7 @@ export function CopyEmail({ email }: { email: string }) {
     <button
       type="button"
       onClick={copy}
-      className="rounded-full bg-graphite px-5 py-2.5 text-[15px] font-medium text-ink transition-colors duration-200 ease-out-expo hover:bg-hairline active:scale-[0.97]"
+      className={pillClass(false)}
     >
       <span aria-live="polite">{label}</span>
     </button>

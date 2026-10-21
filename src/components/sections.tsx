@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { profile } from "@/content/profile";
 import { featured, lab, type FeaturedProject } from "@/content/projects";
@@ -28,8 +29,30 @@ export function Pill({
   );
 }
 
-// Labels what a Device screen shows. Only rendered alongside a Device (globals.css gate),
-// so a visitor never mistakes sample figures for real ones (docs/adr/0004).
+// A Device's place in the layout. With the Stage on, the empty slot holds space for the 3D Device;
+// with it off (no WebGL, no JS, or a failed context) the poster shows the same real screen as an image,
+// so every visitor sees the software running (globals.css gates which one shows).
+function StageSlot({ id, poster, alt, className }: { id: string; poster: string; alt: string; className: string }) {
+  return (
+    <>
+      <div data-stage-slot={id} aria-hidden className={className} />
+      <Image
+        data-stage-poster
+        src={poster}
+        alt={alt}
+        width={1280}
+        height={800}
+        priority={id === "hero"}
+        sizes="(max-width: 920px) 100vw, 880px"
+        // The hero poster is height-capped so both hero pills stay above the fold on laptops.
+        className={`mx-auto mt-10 rounded-2xl ${id === "hero" ? "h-auto max-h-[min(44svh,500px)] w-auto max-w-full" : "w-full max-w-[880px]"}`}
+      />
+    </>
+  );
+}
+
+// Labels what a Device screen (or its no-WebGL poster) shows, so a visitor never mistakes
+// sample figures for real ones (docs/adr/0004). Always visible: both carry dollar figures.
 function StageCaption({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <p data-stage-caption className={`text-center text-[12px] text-ink-muted ${className}`}>
@@ -74,12 +97,11 @@ export function Hero() {
     <section
       id="top"
       aria-labelledby="hero-title"
-      className={`${shell} flex min-h-svh flex-col items-center justify-center pt-24 pb-20 text-center`}
+      className={`${shell} flex min-h-svh flex-col items-center justify-center pt-20 pb-16 text-center`}
     >
-      <p className="text-[19px] font-medium text-ink-muted">{profile.name}</p>
       <h1
         id="hero-title"
-        className="mt-3 text-[clamp(2.5rem,6.4vw,5.5rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance"
+        className="text-[clamp(2.5rem,6.4vw,5.5rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance"
       >
         {profile.headline.split(/(?<=\.) /).map((line) => (
           <span key={line} className="block">
@@ -87,17 +109,18 @@ export function Hero() {
           </span>
         ))}
       </h1>
-      <div
-        data-stage-slot="hero"
-        aria-hidden
-        className="mt-10 h-[clamp(220px,40svh,480px)] w-full max-w-[820px]"
+      <StageSlot
+        id="hero"
+        poster="/footage/flowpulse/invoices.jpg"
+        alt="FlowPulse's invoice list in its demo workspace: draft, overdue and sent invoices for fictional clients"
+        className="mt-6 h-[clamp(240px,min(54svh,72vw),620px)] w-full max-w-[1120px]"
       />
-      <StageCaption className="mt-3">FlowPulse demo workspace, sample data</StageCaption>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <StageCaption className="mt-2">FlowPulse demo workspace, sample data</StageCaption>
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
         <Pill href="#flowpulse" primary>
           See FlowPulse
         </Pill>
-        <Pill href="#contact">Get in touch</Pill>
+        <AskTyreeButton>Ask Tyree</AskTyreeButton>
       </div>
       <p className="mt-12 max-w-[56ch] text-[clamp(1.0625rem,1.6vw,1.3125rem)] leading-relaxed text-ink-muted text-pretty">
         {profile.summary}
@@ -152,9 +175,10 @@ function Project({ project }: { project: FeaturedProject }) {
       aria-labelledby={`${project.slug}-title`}
       className={`${shell} py-28 lg:py-40`}
     >
-      <div
-        data-stage-slot={project.slug}
-        aria-hidden
+      <StageSlot
+        id={project.slug}
+        poster={project.poster}
+        alt={`${project.name} screen with sample data`}
         className="mx-auto h-[clamp(240px,min(62svh,80vw),640px)] w-full max-w-[1000px]"
       />
       <StageCaption className="mt-6 mb-20 lg:mt-10 lg:mb-28">{project.footageNote}</StageCaption>
@@ -172,8 +196,8 @@ function Project({ project }: { project: FeaturedProject }) {
         <p className="mt-5 max-w-[52ch] text-[17px] leading-relaxed text-ink-muted text-pretty">
           {project.summary}
         </p>
-        <p className="mt-6 inline-flex items-center gap-2 text-[14px] text-accent-ink">
-          <span aria-hidden className="size-1.5 rounded-full bg-accent-bright" />
+        <p className={`mt-6 inline-flex items-center gap-2 text-[14px] ${project.live ? "text-accent-ink" : "text-ink-muted"}`}>
+          <span aria-hidden className={`size-1.5 rounded-full ${project.live ? "bg-accent-bright" : "bg-ink-muted"}`} />
           {project.status}
         </p>
         <ProjectStats project={project} />
@@ -184,7 +208,7 @@ function Project({ project }: { project: FeaturedProject }) {
           {project.link && (
             <a
               href={project.link.href}
-              className="text-[15px] font-medium text-accent-ink hover:underline"
+              className="text-[15px] font-medium text-ink underline underline-offset-4 hover:text-ink-muted"
             >
               {project.link.label}
             </a>
@@ -205,16 +229,6 @@ function Project({ project }: { project: FeaturedProject }) {
             </li>
           ))}
         </ol>
-        <ul aria-label={`${project.name} stack`} className="mt-16 flex flex-wrap gap-2">
-          {project.stack.map((t) => (
-            <li
-              key={t}
-              className="rounded-full bg-stage-raised px-3.5 py-1.5 text-[13px] text-ink-muted"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
       </div>
       </div>
     </section>
@@ -247,15 +261,18 @@ export function AiSection() {
         </h2>
         <p className="mt-6 max-w-[60ch] text-[clamp(1.0625rem,1.6vw,1.25rem)] leading-relaxed text-ink-muted text-pretty">
           Agents work best with a process, not a prompt. This site was planned in recorded interview
-          rounds, tracked as fifteen tickets, and built by agents following its decision records.
+          rounds, tracked as 15 tickets, and built by agents following its decision records.
           Its assistant, Ask Tyree, answers from the site&apos;s own content with a model that runs
           on your device.
         </p>
-        <div
-          data-stage-slot="ai"
-          aria-hidden
-          className="mx-auto mt-16 h-[clamp(240px,min(62svh,80vw),640px)] w-full max-w-[1000px]"
-        />
+        {study && (
+          <StageSlot
+            id="ai"
+            poster={study.poster}
+            alt="Ask Tyree answering a question about FlowPulse, with numbered source links"
+            className="mx-auto mt-16 h-[clamp(240px,min(62svh,80vw),640px)] w-full max-w-[1000px]"
+          />
+        )}
         {study && <StageCaption className="mt-6 lg:mt-10">{study.footageNote}</StageCaption>}
         <div className="mt-10 flex flex-wrap gap-3">
           <AskTyreeButton primary>Ask Tyree</AskTyreeButton>
@@ -339,14 +356,14 @@ export function Lab() {
           {lab.map((item) => (
             <li key={item.name}>
               <h3 className="text-[24px] font-semibold tracking-[-0.02em]">{item.name}</h3>
-              <p className="mt-1 text-[14px] text-accent-ink">{item.kind}</p>
+              <p className="mt-1 text-[14px] text-ink-muted">{item.kind}</p>
               <p className="mt-4 max-w-[58ch] text-[16px] leading-relaxed text-ink-muted text-pretty">
                 {item.body}
               </p>
               {item.link && (
                 <a
                   href={item.link.href}
-                  className="mt-4 inline-block text-[15px] font-medium text-accent-ink hover:underline"
+                  className="mt-4 inline-block text-[15px] font-medium text-ink underline underline-offset-4 hover:text-ink-muted"
                 >
                   {item.link.label}
                 </a>
@@ -379,7 +396,7 @@ export function Contact() {
         </p>
         <a
           href={`mailto:${profile.email}`}
-          className="mt-10 inline-block text-[clamp(1.25rem,3vw,2rem)] font-medium tracking-[-0.02em] text-ink break-all hover:text-accent-ink"
+          className="mt-10 inline-block text-[clamp(1.25rem,3vw,2rem)] font-medium tracking-[-0.02em] text-ink break-all underline-offset-8 hover:underline"
         >
           {profile.email}
         </a>

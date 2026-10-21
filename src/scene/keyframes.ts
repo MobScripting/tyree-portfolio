@@ -26,8 +26,8 @@ export const slots: Record<string, SlotDef> = {
     screen: "flowpulse",
     stills: [fp("invoices.jpg")],
     intro: true,
-    enter: { rx: 0.32, ry: 0, lid: 1.9 },
-    rest: { rx: 0.32, ry: 0, lid: 1.9 },
+    enter: { rx: 0.22, ry: 0, lid: 1.9 },
+    rest: { rx: 0.22, ry: 0, lid: 1.9 },
     exit: { rx: 0.62, ry: 0, lid: 1.15 },
   },
   flowpulse: {

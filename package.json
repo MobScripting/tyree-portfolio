@@ -40,6 +40,7 @@
     "geist": "^1.8.1",
     "lighthouse": "^12.8.2",
     "playwright": "^1.64.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"

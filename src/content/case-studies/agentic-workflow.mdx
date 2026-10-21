@@ -19,7 +19,7 @@ An AI coding agent will happily write a portfolio. Left alone, it'll also invent
 
 ### Requirements, interrogated
 
-Before any code, an agent interviewed me in seven rounds, one decision at a time: target roles, how deep the 3D should go, which projects to feature, what personal details may be public, how to frame an IT background for developer roles. Each answer shaped the next round's questions. The results live in a product brief, a 14-term glossary and six architecture decision records. Later sessions read those instead of re-deciding them.
+Before any code, an agent interviewed me in 7 rounds, one decision at a time: target roles, how deep the 3D should go, which projects to feature, what personal details may be public, how to frame an IT background for developer roles. Each answer shaped the next round's questions. The results live in a product brief, a 14-term glossary and six architecture decision records. Later sessions read those instead of re-deciding them.
 
 ### Tickets with blocking edges
 
@@ -31,15 +31,15 @@ The agent doesn't just write code. It drives a headless browser to screenshot ev
 
 ## What the loop caught
 
-Every number on this site was checked against the source repository before it shipped. That check found seven claims that were wrong, all written in good faith from a first read of the code:
+Every number on this site was checked against the source repository before it shipped. That check found 7 claims that were wrong, all written in good faith from a first read of the code:
 
 - The AD Manager's PowerShell scripts were described as signed. They aren't.
-- "Every query is scoped to the organization" became "the API scopes its data access": 31 of 32 route modules do.
+- “Every query is scoped to the organization” became “the API scopes its data access”: 31 of 32 route modules do.
 - The AD installer was called a Windows service. It registers a scheduled task.
 - An expired FlowPulse trial was said to make a workspace read-only. It blocks new records.
 - Input validation was described as covering every write. It covers half the route modules.
 - The one unscoped route module was guessed to be the webhook endpoint. It's the public routes.
-- "Six years" of IT experience didn't match the dates on the resume. It's over four.
+- “Six years” of IT experience didn't match the dates on the resume. It's over four.
 
 The process also caught the agent's own engineering mistakes: a race in the answer eval that read each answer before it finished, a race that could start two model engines on one GPU, and a lint failure that slipped into one commit and was fixed in the next.
 

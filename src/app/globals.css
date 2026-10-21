@@ -55,6 +55,12 @@ body {
   border-radius: 6px;
 }
 
+a,
+button,
+input {
+  touch-action: manipulation;
+}
+
 a {
   text-underline-offset: 0.2em;
   text-decoration-thickness: 1px;
@@ -67,13 +73,15 @@ a {
 
 /* Stage slots hold space for a Device. They exist only when the head script confirmed
    WebGL, so with no JS or no GPU the layout closes up instead of showing empty gaps. */
-[data-stage-slot],
-[data-stage-caption] {
+[data-stage-slot] {
   display: none;
 }
-html[data-stage="on"] [data-stage-slot],
-html[data-stage="on"] [data-stage-caption] {
+html[data-stage="on"] [data-stage-slot] {
   display: block;
+}
+/* Posters stand in for the Devices whenever the stage is off, so the software is always visible. */
+html[data-stage="on"] [data-stage-poster] {
+  display: none;
 }
 
 /* Printing the resume: only the sheet, edge to edge on US Letter. */

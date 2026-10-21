@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-21T00:00:00Z",
+  "title": "Design System: Tyree Chappell",
+  "extensions": {
+    "colorMeta": {
+      "stage": { "role": "neutral", "displayName": "Stage Black", "canonical": "#050507", "tonalRamp": ["#050507", "#0d0d11", "#1d1d22", "#2a2a31", "#48484f", "#6b6b72", "#8e8e95", "#f5f5f7"] },
+      "stage-raised": { "role": "neutral", "displayName": "Raised Stage", "canonical": "#0d0d11", "tonalRamp": ["#050507", "#0d0d11", "#1d1d22", "#2a2a31", "#48484f", "#6b6b72", "#8e8e95", "#f5f5f7"] },
+      "graphite": { "role": "neutral", "displayName": "Graphite", "canonical": "#1d1d22", "tonalRamp": ["#050507", "#0d0d11", "#1d1d22", "#2a2a31", "#48484f", "#6b6b72", "#8e8e95", "#f5f5f7"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "#2a2a31", "tonalRamp": ["#050507", "#0d0d11", "#1d1d22", "#2a2a31", "#48484f", "#6b6b72", "#8e8e95", "#f5f5f7"] },
+      "ink": { "role": "neutral", "displayName": "Aluminium", "canonical": "#f5f5f7", "tonalRamp": ["#050507", "#0d0d11", "#1d1d22", "#2a2a31", "#48484f", "#6b6b72", "#8e8e95", "#f5f5f7"] },
+      "ink-muted": { "role": "neutral", "displayName": "Brushed Aluminium", "canonical": "#8e8e95", "tonalRamp": ["#050507", "#0d0d11", "#1d1d22", "#2a2a31", "#48484f", "#6b6b72", "#8e8e95", "#f5f5f7"] },
+      "accent": { "role": "primary", "displayName": "FlowPulse Indigo", "canonical": "#4f46e5", "tonalRamp": ["#1e1b4b", "#312e81", "#3730a3", "#4338ca", "#4f46e5", "#6366f1", "#818cf8", "#a5b4fc"] },
+      "accent-bright": { "role": "primary", "displayName": "Live Indigo", "canonical": "#6366f1", "tonalRamp": ["#1e1b4b", "#312e81", "#3730a3", "#4338ca", "#4f46e5", "#6366f1", "#818cf8", "#a5b4fc"] },
+      "accent-ink": { "role": "primary", "displayName": "Indigo Ink", "canonical": "#a5b4fc", "tonalRamp": ["#1e1b4b", "#312e81", "#3730a3", "#4338ca", "#4f46e5", "#6366f1", "#818cf8", "#a5b4fc"] },
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "#ffffff", "tonalRamp": ["#1d1d1f", "#3a3a3c", "#5d5d62", "#86868b", "#aeaeb2", "#d2d2d7", "#ececf0", "#ffffff"] },
+      "paper-ink": { "role": "neutral", "displayName": "Paper Ink", "canonical": "#1d1d1f", "tonalRamp": ["#1d1d1f", "#3a3a3c", "#5d5d62", "#86868b", "#aeaeb2", "#d2d2d7", "#ececf0", "#ffffff"] },
+      "paper-body": { "role": "neutral", "displayName": "Paper Body", "canonical": "#3a3a3c", "tonalRamp": ["#1d1d1f", "#3a3a3c", "#5d5d62", "#86868b", "#aeaeb2", "#d2d2d7", "#ececf0", "#ffffff"] },
+      "paper-muted": { "role": "neutral", "displayName": "Paper Muted", "canonical": "#86868b", "tonalRamp": ["#1d1d1f", "#3a3a3c", "#5d5d62", "#86868b", "#aeaeb2", "#d2d2d7", "#ececf0", "#ffffff"] },
+      "paper-rule": { "role": "neutral", "displayName": "Paper Rule", "canonical": "#d2d2d7", "tonalRamp": ["#1d1d1f", "#3a3a3c", "#5d5d62", "#86868b", "#aeaeb2", "#d2d2d7", "#ececf0", "#ffffff"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The hero line only, one sentence per line." },
+      "display-close": { "displayName": "Display Close", "purpose": "The Contact sign-off; the only type at the 6rem ceiling." },
+      "headline": { "displayName": "Headline", "purpose": "Section and project names." },
+      "headline-read": { "displayName": "Headline Read", "purpose": "Case-study h2 and the walkthrough heading." },
+      "title": { "displayName": "Title", "purpose": "Project beats." },
+      "title-sm": { "displayName": "Title Small", "purpose": "Job roles, AI practices, case-study h3." },
+      "lead": { "displayName": "Lead", "purpose": "Section intros in Brushed Aluminium." },
+      "body": { "displayName": "Body", "purpose": "Running copy at 52 to 68ch." },
+      "body-sm": { "displayName": "Body Small", "purpose": "Lists and experience bullets." },
+      "label": { "displayName": "Label", "purpose": "Nav, status lines, metadata." },
+      "caption": { "displayName": "Caption", "purpose": "Device sample-data captions, Assistant footnotes." },
+      "stat": { "displayName": "Stat", "purpose": "Proof-stat values only (Geist Mono, tabular)." }
+    },
+    "shadows": [
+      { "name": "float", "value": "0 8px 24px rgba(0,0,0,0.45)", "purpose": "The floating Ask Tyree trigger only." },
+      { "name": "overlay", "value": "0 24px 60px rgba(0,0,0,0.6)", "purpose": "The open Assistant panel; the resume sheet uses the same geometry at 0.5 alpha." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Pill background and press transitions, 200ms." },
+      { "name": "lid-reveal", "value": "1.8s, ease-out power 2.4", "purpose": "The one authored moment: the hero Device's lid opens on load." },
+      { "name": "pose-damp", "value": "THREE.MathUtils.damp, lambda 7", "purpose": "Scroll-scrubbed Device poses; interruptible in either direction." },
+      { "name": "footage-crossfade", "value": "smoothstep over the middle 20% of each still's share", "purpose": "Screen stills cross-fade by scroll progress." },
+      { "name": "fly-to", "value": "Lenis scrollTo, 1.6s, -80px offset", "purpose": "Assistant citations scroll through the Devices to the cited section and move focus." },
+      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce", "purpose": "No Lenis, no lid intro, poses snap, citations jump, CSS transitions 0.01ms." },
+      { "name": "shader-warmup", "value": "gl.compileAsync gate", "purpose": "Devices stay hidden until shader programs finish linking." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Pill",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action in a group: See FlowPulse, Read the case study, Download PDF.",
+      "html": "<a class=\"ds-pill-primary\" href=\"#\">See FlowPulse</a>",
+      "css": ".ds-pill-primary { display: inline-flex; align-items: center; border-radius: 9999px; padding: 12px 24px; font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 17px; font-weight: 500; text-decoration: none; background: #4f46e5; color: #fff; transition: background-color 200ms cubic-bezier(0.16,1,0.3,1), transform 200ms cubic-bezier(0.16,1,0.3,1); } .ds-pill-primary:hover { background: #6366f1; } .ds-pill-primary:active { transform: scale(0.97); } .ds-pill-primary:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Pill",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Every non-primary action: Ask Tyree, resumes, GitHub, How this site was built.",
+      "html": "<button type=\"button\" class=\"ds-pill-secondary\">Ask Tyree</button>",
+      "css": ".ds-pill-secondary { display: inline-flex; align-items: center; border: 0; border-radius: 9999px; padding: 12px 24px; font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 17px; font-weight: 500; background: #1d1d22; color: #f5f5f7; cursor: pointer; transition: background-color 200ms cubic-bezier(0.16,1,0.3,1), transform 200ms cubic-bezier(0.16,1,0.3,1); } .ds-pill-secondary:hover { background: #2a2a31; } .ds-pill-secondary:active { transform: scale(0.97); } .ds-pill-secondary:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; }"
+    },
+    {
+      "name": "Resume Variant Switch",
+      "kind": "chip",
+      "refersTo": "segmented-control",
+      "description": "Segmented pill switching between the full-stack and AI resume.",
+      "html": "<nav class=\"ds-seg\" aria-label=\"Resume variant\"><a class=\"ds-seg-item\" aria-current=\"page\" href=\"#\">Full-stack</a><a class=\"ds-seg-item\" href=\"#\">AI engineering</a></nav>",
+      "css": ".ds-seg { display: inline-flex; border-radius: 9999px; background: #1d1d22; padding: 4px; font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 14px; } .ds-seg-item { border-radius: 9999px; padding: 8px 16px; color: #8e8e95; text-decoration: none; transition: color 150ms; } .ds-seg-item:hover { color: #f5f5f7; } .ds-seg-item[aria-current=page] { background: #050507; color: #f5f5f7; } .ds-seg-item:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ask Field",
+      "kind": "input",
+      "refersTo": "input-ask",
+      "description": "The Assistant's question field with its submit pill, on the raised panel.",
+      "html": "<form class=\"ds-ask\"><input class=\"ds-ask-input\" placeholder=\"Ask about Tyree's work\" /><button class=\"ds-ask-send\" type=\"submit\">Ask</button></form>",
+      "css": ".ds-ask { display: flex; gap: 8px; background: #0d0d11; padding: 16px 20px; font-family: var(--font-geist-sans), system-ui, sans-serif; } .ds-ask-input { flex: 1; min-width: 0; border: 0; border-radius: 9999px; background: #050507; padding: 10px 16px; font-size: 14px; color: #f5f5f7; } .ds-ask-input::placeholder { color: #8e8e95; } .ds-ask-input:focus { outline: none; } .ds-ask-input:focus-visible { outline: 2px solid #a5b4fc; } .ds-ask-send { border: 0; border-radius: 9999px; background: #4f46e5; padding: 10px 16px; font-size: 14px; font-weight: 500; color: #fff; cursor: pointer; transition: background-color 150ms; } .ds-ask-send:hover { background: #6366f1; } .ds-ask-send:disabled { opacity: 0.5; }"
+    },
+    {
+      "name": "Nav Bar",
+      "kind": "nav",
+      "refersTo": "nav-bar",
+      "description": "Fixed translucent bar: name left, section links right.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-name\" href=\"#\">Tyree Chappell</a><ul class=\"ds-nav-links\"><li><a href=\"#\">Work</a></li><li><a href=\"#\">AI</a></li><li><a href=\"#\">Experience</a></li><li><a href=\"#\">Resume</a></li><li><a href=\"#\">Contact</a></li></ul></header>",
+      "css": ".ds-nav { display: flex; height: 56px; align-items: center; justify-content: space-between; padding: 0 32px; background: rgba(5,5,7,0.8); backdrop-filter: blur(24px) saturate(1.5); font-family: var(--font-geist-sans), system-ui, sans-serif; } .ds-nav-name { font-size: 14px; font-weight: 600; letter-spacing: -0.025em; color: #f5f5f7; text-decoration: none; } .ds-nav-links { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; font-size: 14px; } .ds-nav-links a { color: #8e8e95; text-decoration: none; transition: color 150ms; } .ds-nav-links a:hover { color: #f5f5f7; } .ds-nav-links a:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; border-radius: 6px; }"
+    },
+    {
+      "name": "Proof Stats",
+      "kind": "custom",
+      "refersTo": "stat",
+      "description": "Verified proof stats: Mono tabular values over muted labels, under a hairline rule.",
+      "html": "<dl class=\"ds-stats\"><div><dd><span class=\"ds-stat-v\">33</span><span class=\"ds-stat-l\">data models</span></dd></div><div><dd><span class=\"ds-stat-v\">190</span><span class=\"ds-stat-l\">API route handlers</span></dd></div></dl>",
+      "css": ".ds-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; border-top: 1px solid #2a2a31; padding-top: 24px; margin: 0; } .ds-stats dd { margin: 0; } .ds-stat-v { display: block; font-family: var(--font-geist-mono), ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 22px; color: #f5f5f7; } .ds-stat-l { font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 13px; color: #8e8e95; }"
+    },
+    {
+      "name": "Status Line",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "Project status; indigo only when the project is live.",
+      "html": "<p class=\"ds-status ds-status-live\"><span class=\"ds-dot\"></span>Live in production</p><p class=\"ds-status\"><span class=\"ds-dot\"></span>Internal tool</p>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 8px; margin: 0 16px 0 0; font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 14px; color: #8e8e95; } .ds-dot { width: 6px; height: 6px; border-radius: 9999px; background: #8e8e95; } .ds-status-live { color: #a5b4fc; } .ds-status-live .ds-dot { background: #6366f1; }"
+    },
+    {
+      "name": "Ask Tyree Trigger",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Floating graphite pill with a live dot; one of the two shadowed elements.",
+      "html": "<button type=\"button\" class=\"ds-ask-trigger\"><span class=\"ds-ask-dot\"></span>Ask Tyree</button>",
+      "css": ".ds-ask-trigger { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 9999px; background: #1d1d22; padding: 12px 20px; font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 15px; font-weight: 500; color: #f5f5f7; box-shadow: 0 8px 24px rgba(0,0,0,0.45); cursor: pointer; transition: background-color 300ms, opacity 300ms; } .ds-ask-trigger:hover { background: #2a2a31; } .ds-ask-trigger:active { transform: scale(0.97); } .ds-ask-trigger:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; } .ds-ask-dot { width: 8px; height: 8px; border-radius: 9999px; background: #6366f1; }"
+    },
+    {
+      "name": "Architecture Node",
+      "kind": "card",
+      "refersTo": "architecture-node",
+      "description": "One node of an HTML architecture diagram, joined to the next by a hairline connector.",
+      "html": "<div class=\"ds-arch\"><div class=\"ds-arch-node\"><p class=\"ds-arch-name\">API</p><p class=\"ds-arch-detail\">Express on Node, JWT auth</p><ul class=\"ds-arch-svc\"><li>PostgreSQL</li><li>Stripe</li></ul></div><span class=\"ds-arch-link\"></span><div class=\"ds-arch-node\"><p class=\"ds-arch-name\">Worker</p><p class=\"ds-arch-detail\">Scheduled jobs</p></div></div>",
+      "css": ".ds-arch { display: flex; align-items: stretch; font-family: var(--font-geist-sans), system-ui, sans-serif; } .ds-arch-node { flex: 1; border-radius: 16px; background: #1d1d22; padding: 16px; } .ds-arch-link { align-self: center; width: 20px; height: 1px; background: #2a2a31; } .ds-arch-name { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: #f5f5f7; } .ds-arch-detail { margin: 4px 0 0; font-size: 13px; line-height: 1.375; color: #8e8e95; } .ds-arch-svc { list-style: none; margin: 16px 0 0; padding: 12px 0 0; border-top: 1px solid #2a2a31; font-size: 12px; color: #8e8e95; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Keynote Hall",
+    "overview": "The site is a dark auditorium where one engineer's software is unveiled on hardware. The ground is near-black stage, the light comes from the product, and everything else stays out of its way: aluminium text, graphite controls, one indigo voice. A procedural laptop (the Device) sits in reserved slots in the layout and is lit by painted studio light, not by a renderer's lights. Scroll scrubs it; the page never animates for its own sake.\n\nDensity is low and deliberate. Sections breathe at 112 to 160px vertical rhythm, headlines are large and tight-tracked, and body copy sits in muted aluminium at a reading measure. Facts live in HTML (ADR 0001). The 3D Stage is aria-hidden decoration, and when WebGL is absent the same real screens appear as flat posters, so the layout is complete without it.\n\nThe resume is the one place the hall turns the lights on: a white Letter sheet with its own paper palette, framed by the dark stage on screen and printed alone.",
+    "keyCharacteristics": [
+      "Near-black stage, aluminium type, one indigo accent reserved for live state and the primary action.",
+      "Geist at display scale, semibold, tracked tight (-0.035em); Geist Mono only for proof stats and code.",
+      "Pill controls on graphite; no outlined boxes and no cards nested in cards.",
+      "Depth comes from painted light on the Device and tonal steps between stage, stage-raised and graphite.",
+      "One authored motion moment (the hero lid reveal); everything else is scroll-scrubbed and damped."
+    ],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "Indigo appears only on live state and the primary action. A section has at most one indigo pill; every other control is graphite.", "section": "colors" },
+      { "name": "The Live Means Live Rule", "body": "A status line and its dot turn indigo only when the project is actually live (`project.live`); otherwise both are Brushed Aluminium.", "section": "colors" },
+      { "name": "The Ink Link Rule", "body": "Inline links are Aluminium with an underline (muted decoration in long-form, brightening on hover), never indigo. Indigo text is reserved for state and actions.", "section": "colors" },
+      { "name": "The Mono Is Data Rule", "body": "Geist Mono appears only on proof-stat values and code. Labels, dates and captions stay in Geist (dates use tabular figures instead).", "section": "typography" },
+      { "name": "The 6rem Ceiling Rule", "body": "No type exceeds 6rem. Display tracking is -0.035em; never wider.", "section": "typography" },
+      { "name": "The Lit Not Shadowed Rule", "body": "In-flow content never takes a shadow. Shadows exist only on things that float above the page (the Assistant trigger and panel) and on the resume sheet.", "section": "elevation" },
+      { "name": "The Painted Studio Rule", "body": "The Stage adds no lights, environment or PBR materials. New surfaces on the Device are painted onto canvases and drawn unlit.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** put indigo on exactly one primary pill per group and on live state; everything else is Graphite or Aluminium.",
+      "**Do** reserve Device space with a stage slot and give it a poster and a sample-data caption.",
+      "**Do** keep display type semibold at -0.035em tracking, and at or under 6rem.",
+      "**Do** separate sections with tonal steps (Stage to Raised Stage) or a 1px Hairline rule.",
+      "**Do** set proof-stat values in Geist Mono with tabular figures.",
+      "**Do** keep the hero laptop at about 42vw on a 1440x900 viewport so both hero pills stay above the fold.",
+      "**Do** paint any new Device surface onto a canvas and draw it unlit."
+    ],
+    "donts": [
+      "**Don't** use indigo for inline links, headings or decoration; links are Aluminium and underlined.",
+      "**Don't** outline boxes or nest a card inside a card; a surface is a tonal fill, never a border.",
+      "**Don't** shadow in-flow content; only the floating Assistant and the resume sheet take shadows.",
+      "**Don't** place a label or eyebrow above a heading; the name lives in the nav.",
+      "**Don't** use gradient text, or Geist Mono for anything but data and code.",
+      "**Don't** add scene lights, environment maps or PBR materials to the Stage.",
+      "**Don't** show Device footage without its sample-data caption.",
+      "**Don't** add a second authored animation; motion comes from scroll."
+    ]
+  }
+}

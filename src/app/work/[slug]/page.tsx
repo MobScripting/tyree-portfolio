@@ -39,7 +39,7 @@ export default async function CaseStudy({ params }: PageProps<"/work/[slug]">) {
   return (
     <>
       <Nav />
-      <main className={`${shell} pt-32 pb-28`}>
+      <main id="main" className={`${shell} pt-32 pb-28`}>
         <article className="mx-auto max-w-[920px]">
           <Link href="/#work" className="text-[14px] text-ink-muted no-underline hover:text-ink">
             All work
@@ -51,8 +51,8 @@ export default async function CaseStudy({ params }: PageProps<"/work/[slug]">) {
             <p className="mt-5 max-w-[30ch] text-[clamp(1.375rem,2.6vw,2rem)] leading-snug tracking-[-0.015em] text-ink text-balance">
               {project.tagline}
             </p>
-            <p className="mt-6 inline-flex items-center gap-2 text-[14px] text-accent-ink">
-              <span aria-hidden className="size-1.5 rounded-full bg-accent-bright" />
+            <p className={`mt-6 inline-flex items-center gap-2 text-[14px] ${project.live ? "text-accent-ink" : "text-ink-muted"}`}>
+              <span aria-hidden className={`size-1.5 rounded-full ${project.live ? "bg-accent-bright" : "bg-ink-muted"}`} />
               {project.status}
             </p>
             <div className="max-w-[560px]">
@@ -66,13 +66,9 @@ export default async function CaseStudy({ params }: PageProps<"/work/[slug]">) {
             <h2 id="stack-title" className="text-[21px] font-semibold tracking-[-0.015em]">
               Stack
             </h2>
-            <ul className="mt-5 flex flex-wrap gap-2">
-              {project.stack.map((t) => (
-                <li key={t} className="rounded-full bg-stage-raised px-3.5 py-1.5 text-[13px] text-ink-muted">
-                  {t}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-4 max-w-[68ch] text-[17px] leading-relaxed text-ink-muted text-pretty">
+              Built with {project.stack.slice(0, -1).join(", ")} and {project.stack.at(-1)}.
+            </p>
           </section>
 
           <section aria-labelledby="walkthrough-title" className="mt-20 rounded-3xl bg-stage-raised p-8 sm:p-12">

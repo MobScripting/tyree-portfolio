@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { usePathname } from "next/navigation";
 import type { WebWorkerMLCEngine } from "@mlc-ai/web-llm";
 import type { Hit } from "@/assistant/retrieve";
 import { DOWNLOAD_LABEL } from "@/assistant/engine";
 import { OPEN_ASK_TYREE } from "./AskTyreeButton";
+import { flyTo, samePageTarget } from "@/lib/scroll";
 
 // "Ask Tyree" (ticket 13, docs/adr/0006): retrieval over the site's own content, answered by a
 // small model that runs on the visitor's GPU. Nothing downloads until the visitor opts in, and
@@ -20,7 +22,7 @@ const getRetriever = () =>
   ));
 
 // Turn "[2]" markers into links to the cited passage; unknown numbers stay as plain text.
-function Cited({ text, hits }: { text: string; hits: Hit[] }) {
+function Cited({ text, hits, onFollow }: { text: string; hits: Hit[]; onFollow: (e: React.MouseEvent<HTMLAnchorElement>) => void }) {
   const parts = text.split(/(\[\d+\])/g);
   return (
     <>
@@ -28,7 +30,7 @@ function Cited({ text, hits }: { text: string; hits: Hit[] }) {
         const n = /^\[(\d+)\]$/.exec(p);
         const hit = n ? hits[Number(n[1]) - 1] : undefined;
         return hit ? (
-          <a key={i} href={hit.chunk.url} className="text-accent-ink no-underline hover:underline" title={hit.chunk.title}>
+          <a key={i} href={hit.chunk.url} onClick={onFollow} className="text-ink underline underline-offset-4 hover:text-ink-muted" title={hit.chunk.title}>
             {p}
           </a>
         ) : (
@@ -95,6 +97,44 @@ export function Assistant() {
     trigger.current?.focus();
   }
 
+  // Following a citation: on this page, close the panel and fly there (the scroll scrubs the
+  // Devices); on another page, close the panel and let the link navigate.
+  function follow(e: React.MouseEvent<HTMLAnchorElement>) {
+    const target = samePageTarget(e.currentTarget.href);
+    setOpen(false);
+    if (!target) return;
+    e.preventDefault();
+    flyTo(target);
+  }
+
+  // The hero and the AI section have their own Ask Tyree buttons, so the floating one stays out
+  // of the way while either is on screen (on phones it would also cover the hero lede).
+  // The panel lives in the root layout, so re-observe after each client-side navigation.
+  const pathname = usePathname();
+  const [heroInView, setHeroInView] = useState(false);
+  useEffect(() => {
+    const els = [document.getElementById("top"), ...document.querySelectorAll("main [data-ask-tyree]")].filter(
+      (el): el is HTMLElement => el instanceof HTMLElement,
+    );
+    if (!els.length) return;
+    const visible = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) visible.add(e.target);
+          else visible.delete(e.target);
+        }
+        setHeroInView(visible.size > 0);
+      },
+      { threshold: 0.25 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => {
+      io.disconnect();
+      setHeroInView(false);
+    };
+  }, [pathname]);
+
   async function load(m = model) {
     // One load at a time: the cached-model auto-load and a Load click can otherwise race
     // and start two engines on the same GPU.
@@ -159,7 +199,8 @@ export function Assistant() {
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => (open ? close() : setOpen(true))}
-        className="fixed right-5 bottom-5 z-40 inline-flex items-center gap-2 rounded-full bg-graphite px-5 py-3 text-[15px] font-medium text-ink shadow-[0_8px_24px_rgba(0,0,0,0.45)] transition-colors hover:bg-hairline active:scale-[0.97] print:hidden"
+        className={`fixed right-5 bottom-5 z-40 inline-flex items-center gap-2 rounded-full bg-graphite px-5 py-3 text-[15px] font-medium text-ink shadow-[0_8px_24px_rgba(0,0,0,0.45)] transition-[opacity,background-color] duration-300 hover:bg-hairline active:scale-[0.97] print:hidden ${heroInView && !open ? "pointer-events-none opacity-0" : "opacity-100"}`}
+        tabIndex={heroInView && !open ? -1 : 0}
       >
         <span aria-hidden className="size-2 rounded-full bg-accent-bright" />
         Ask Tyree
@@ -188,7 +229,7 @@ export function Assistant() {
             </button>
           </header>
 
-          <div ref={log} className="flex-1 space-y-6 overflow-y-auto px-5 py-4 text-[14px] leading-relaxed" aria-busy={generating}>
+          <div ref={log} className="flex-1 space-y-6 overflow-y-auto overscroll-contain px-5 py-4 text-[14px] leading-relaxed break-words" aria-busy={generating}>
             {turns.length === 0 && (
               <p className="text-ink-muted">
                 Try: &ldquo;How does FlowPulse handle billing?&rdquo; or &ldquo;How does Tyree work with AI agents?&rdquo;
@@ -199,7 +240,7 @@ export function Assistant() {
                 <p className="font-medium text-ink">{t.q}</p>
                 {t.text && (
                   <p className="mt-2 text-ink">
-                    <Cited text={t.text} hits={t.hits} />
+                    <Cited text={t.text} hits={t.hits} onFollow={follow} />
                   </p>
                 )}
                 {t.done && t.hits.length === 0 && <p className="mt-2 text-ink-muted">Nothing on this site matches that question.</p>}
@@ -207,7 +248,7 @@ export function Assistant() {
                   <ol className="mt-3 space-y-1.5 text-[13px]">
                     {t.hits.map((h, n) => (
                       <li key={h.chunk.id}>
-                        <a href={h.chunk.url} onClick={close} className="text-accent-ink no-underline hover:underline">
+                        <a href={h.chunk.url} onClick={follow} className="text-ink underline underline-offset-4 hover:text-ink-muted">
                           [{n + 1}] {h.chunk.title}
                         </a>
                         {!t.text && <span className="mt-0.5 block text-ink-muted">{h.chunk.text.slice(0, 160)}…</span>}
@@ -259,7 +300,9 @@ export function Assistant() {
                 id={`${panelId}-q`}
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                placeholder={status === "ready" ? "Ask about Tyree's work" : "Search Tyree's work"}
+                placeholder={status === "ready" ? "Ask about Tyree's work…" : "Search Tyree's work…"}
+                name="question"
+                autoComplete="off"
                 maxLength={300}
                 className="min-w-0 flex-1 rounded-full bg-stage px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-muted focus:outline-none focus-visible:outline-2 focus-visible:outline-accent-ink"
               />

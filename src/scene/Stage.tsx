@@ -14,7 +14,7 @@ import { ready, still } from "./footage";
 
 const damp = THREE.MathUtils.damp;
 
-function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: boolean }) {
+function Device({ el, def, reduced, warm }: { el: HTMLElement; def: SlotDef; reduced: boolean; warm: { current: boolean } }) {
   const root = useRef<THREE.Group>(null);
   const lid = useRef<THREE.Group>(null);
   const intro = useRef(def.intro && !reduced ? 0 : 1);
@@ -37,7 +37,7 @@ function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: 
     if (!g || !lid.current || !A || !B) return;
     const { size, viewport } = state;
     const r = el.getBoundingClientRect();
-    g.visible = r.bottom > -80 && r.top < size.height + 80;
+    g.visible = warm.current && r.bottom > -80 && r.top < size.height + 80;
     if (!g.visible) return;
     textures.current ??= def.stills.map((url) => still(url, invalidate));
 
@@ -45,7 +45,9 @@ function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: 
     const k = viewport.height / size.height;
     // Fit the rest pose's turned footprint, not the flat width, so 3/4 views stay in the slot.
     const fitW = LAPTOP.w * Math.cos(def.rest.ry) + LAPTOP.d * Math.abs(Math.sin(def.rest.ry));
-    const s = Math.min((r.width * k) / (fitW * 1.1), (r.height * k) / 2.6);
+    // Fit the whole open Device inside its slot. The hero's flatter tilt shows less deck, so it
+    // needs a little more height per unit of size than the section Devices.
+    const s = Math.min((r.width * k) / (fitW * 1.1), (r.height * k) / (def.intro ? 2.7 : 2.6));
     g.position.set(
       (r.left + r.width / 2 - size.width / 2) * k,
       // Drop by roughly half the open laptop's height so the whole Device centers in the slot.
@@ -55,8 +57,10 @@ function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: 
 
     const t = THREE.MathUtils.clamp((size.height / 2 - (r.top + r.height / 2)) / (size.height / 2 + r.height / 2), -1, 1);
     const target = poseAt(def, t);
-    if (intro.current < 1) intro.current = Math.min(1, intro.current + delta / 1.6);
-    const open = 1 - Math.pow(1 - intro.current, 4);
+    // The one authored motion moment: the lid reveal over ~1.8 s on an ease-out, slow enough
+    // to read as a reveal rather than finishing before the eye lands on it.
+    if (intro.current < 1) intro.current = Math.min(1, intro.current + delta / 1.8);
+    const open = 1 - Math.pow(1 - intro.current, 2.4);
 
     const p = pose.current;
     // Springs-like damping keeps every change interruptible from the current value.
@@ -93,7 +97,7 @@ function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: 
         </mesh>
         <mesh position-z={0.001}>
           <planeGeometry args={[SCREEN.w, SCREEN.h]} />
-          <meshBasicMaterial ref={matB} toneMapped={false} transparent opacity={0} depthWrite={false} />
+          <meshBasicMaterial ref={matB} map={placeholder} toneMapped={false} transparent opacity={0} depthWrite={false} />
         </mesh>
       </Laptop>
     </group>
@@ -117,10 +121,38 @@ function ScrollInvalidator() {
   return null;
 }
 
+// Linking shader programs synchronously on the first frame blocks the main thread for hundreds
+// of milliseconds on phones. compileAsync links them in parallel (KHR_parallel_shader_compile)
+// and Devices stay hidden until it resolves. It only walks visible objects, so the Device roots
+// are shown for the synchronous part of the call.
+function Warmup({ warm, count }: { warm: { current: boolean }; count: number }) {
+  const { gl, scene, camera, invalidate } = useThree();
+  useEffect(() => {
+    if (!count) return;
+    let live = true;
+    const roots = scene.children.filter((o) => !o.visible);
+    roots.forEach((o) => (o.visible = true));
+    const done = gl.compileAsync(scene, camera);
+    roots.forEach((o) => (o.visible = false));
+    done
+      .catch(() => {})
+      .then(() => {
+        if (!live) return;
+        warm.current = true;
+        invalidate();
+      });
+    return () => {
+      live = false;
+    };
+  }, [gl, scene, camera, invalidate, warm, count]);
+  return null;
+}
+
 export default function Stage() {
   const [els, setEls] = useState<{ id: string; el: HTMLElement }[]>([]);
   const [dpr, setDpr] = useState<number | [number, number]>([1, 1.75]);
   const [reduced, setReduced] = useState(false);
+  const warm = useRef(false);
 
   useEffect(() => {
     const found = [...document.querySelectorAll<HTMLElement>("[data-stage-slot]")]
@@ -150,8 +182,9 @@ export default function Stage() {
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         <ScrollInvalidator />
+        <Warmup warm={warm} count={els.length} />
         {els.map(({ id, el }) => (
-          <Device key={id} el={el} def={slots[id]} reduced={reduced} />
+          <Device key={id} el={el} def={slots[id]} reduced={reduced} warm={warm} />
         ))}
       </Canvas>
     </div>

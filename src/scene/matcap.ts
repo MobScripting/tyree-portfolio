@@ -41,13 +41,6 @@ export function aluminiumMatcap() {
     c.fillStyle = strip;
     c.fillRect(0, 0, s, s);
   }
-
-  // A faint indigo bounce from the floor ties the metal to the accent.
-  const bounce = c.createRadialGradient(r, s, 4, r, s, s * 0.45);
-  bounce.addColorStop(0, "rgba(99,102,241,0.35)");
-  bounce.addColorStop(1, "rgba(99,102,241,0)");
-  c.fillStyle = bounce;
-  c.fillRect(0, 0, s, s);
   c.restore();
 
   cached = new THREE.CanvasTexture(canvas);

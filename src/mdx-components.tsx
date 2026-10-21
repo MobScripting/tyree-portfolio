@@ -20,7 +20,7 @@ const components: MDXComponents = {
   ul: (p) => <ul className="mt-5 max-w-[68ch] list-disc space-y-2.5 pl-5 text-[17px] leading-[1.65] text-ink-muted marker:text-hairline" {...p} />,
   ol: (p) => <ol className="mt-5 max-w-[68ch] list-decimal space-y-2.5 pl-5 text-[17px] leading-[1.65] text-ink-muted marker:text-ink-muted" {...p} />,
   strong: (p) => <strong className="font-semibold text-ink" {...p} />,
-  a: (p) => <a className="text-accent-ink underline hover:text-ink" {...p} />,
+  a: (p) => <a className="text-ink underline decoration-ink-muted underline-offset-4 hover:decoration-ink" {...p} />,
   code: (p) => <code className="rounded-md bg-graphite px-1.5 py-0.5 font-mono text-[0.88em] text-ink" {...p} />,
   // Wide code scrolls inside its box on phones; tabIndex lets keyboard users scroll it.
   pre: (p) => (
