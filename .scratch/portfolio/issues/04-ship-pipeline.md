@@ -4,8 +4,10 @@
 
 **Blocked by:** 03
 
-**Status:** needs-user (repo creation, vercel login)
+**Status:** done
 
-- [ ] Git repo, plus a GitHub remote once the user says OK
-- [ ] Vercel project linked by the user; preview URL works
-- [ ] Vercel Web Analytics enabled
+- [x] Git repo, plus a GitHub remote once the user says OK (github.com/MobScripting/tyree-portfolio, public)
+- [x] Vercel project linked by the user; preview URL works
+- [x] Vercel Web Analytics enabled
+
+Live: https://tyree-portfolio.vercel.app. Lighthouse mobile on production: performance 89 on a GPU and 75 on software GL; accessibility, best practices and SEO all 100; CLS 0. The analytics script serves 200.
