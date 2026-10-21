@@ -18,6 +18,8 @@ export type FeaturedProject = {
   beats: Beat[];
   stack: string[];
   link?: { href: string; label: string };
+  // Caption under the section's Device: what its screens show.
+  footageNote: string;
 };
 
 export type LabItem = {
@@ -76,6 +78,7 @@ export const featured: FeaturedProject[] = [
       "Proxmox",
     ],
     link: { href: "https://flowpulseapp.org", label: "Visit flowpulseapp.org" },
+    footageNote: "FlowPulse demo workspace, sample data",
   },
   {
     slug: "ad-manager",
@@ -114,6 +117,7 @@ export const featured: FeaturedProject[] = [
       "Server-Sent Events",
       "Tailwind",
     ],
+    footageNote: "Sample data on a fictional contoso.local domain",
   },
 ];
 

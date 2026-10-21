@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { Laptop, LAPTOP } from "./Laptop";
-import { poseAt, slots, type SlotDef } from "./keyframes";
+import { Laptop, LAPTOP, SCREEN } from "./Laptop";
+import { poseAt, screenAt, slots, type SlotDef } from "./keyframes";
+import { makeScreenTexture } from "./screens";
+import { ready, still } from "./footage";
 
 // The Stage (docs/adr/0001): a fixed, aria-hidden canvas behind the page. Each
 // [data-stage-slot] element in the DOM gets a Device locked to its on-screen box,
@@ -17,14 +19,27 @@ function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: 
   const lid = useRef<THREE.Group>(null);
   const intro = useRef(def.intro && !reduced ? 0 : 1);
   const pose = useRef({ rx: def.rest.rx, ry: def.rest.ry, lid: 0, s: 0 });
+  const invalidate = useThree((s) => s.invalidate);
+
+  // Screen: plane A shows the current still, plane B fades in the next one on top of it.
+  const placeholder = useMemo(() => makeScreenTexture(def.screen), [def.screen]);
+  // Footage is requested the first time the Device comes into view, so off-screen Devices
+  // add no image decodes or texture uploads to page load.
+  const textures = useRef<THREE.Texture[] | null>(null);
+  const matA = useRef<THREE.MeshBasicMaterial>(null);
+  const matB = useRef<THREE.MeshBasicMaterial>(null);
+  useEffect(() => () => placeholder.dispose(), [placeholder]);
 
   useFrame((state, delta) => {
     const g = root.current;
-    if (!g || !lid.current) return;
+    const A = matA.current;
+    const B = matB.current;
+    if (!g || !lid.current || !A || !B) return;
     const { size, viewport } = state;
     const r = el.getBoundingClientRect();
     g.visible = r.bottom > -80 && r.top < size.height + 80;
     if (!g.visible) return;
+    textures.current ??= def.stills.map((url) => still(url, invalidate));
 
     // Screen px -> world units on the z = 0 plane; position tracks layout 1:1.
     const k = viewport.height / size.height;
@@ -55,6 +70,14 @@ function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: 
     g.scale.setScalar(p.s);
     lid.current.rotation.x = -p.lid;
 
+    // Footage: stills cross-faded by scroll progress, placeholder until each one loads.
+    const tex = textures.current;
+    const pick = (i: number) => (tex[i] && ready(tex[i]) ? tex[i] : placeholder);
+    const { a, b, mix } = screenAt(tex.length, t);
+    A.map = pick(a);
+    B.map = pick(b);
+    B.opacity = b === a ? 0 : mix;
+
     // Demand frameloop: keep rendering only while the Device is still settling.
     const moving =
       Math.abs(p.rx - target.rx) + Math.abs(p.ry - target.ry) + Math.abs(p.lid - target.lid * open) > 1e-3;
@@ -63,7 +86,16 @@ function Device({ el, def, reduced }: { el: HTMLElement; def: SlotDef; reduced: 
 
   return (
     <group ref={root} visible={false}>
-      <Laptop ref={lid} screen={def.screen} />
+      <Laptop ref={lid}>
+        <mesh>
+          <planeGeometry args={[SCREEN.w, SCREEN.h]} />
+          <meshBasicMaterial ref={matA} map={placeholder} toneMapped={false} />
+        </mesh>
+        <mesh position-z={0.001}>
+          <planeGeometry args={[SCREEN.w, SCREEN.h]} />
+          <meshBasicMaterial ref={matB} toneMapped={false} transparent opacity={0} depthWrite={false} />
+        </mesh>
+      </Laptop>
     </group>
   );
 }

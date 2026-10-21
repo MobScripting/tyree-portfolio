@@ -1,9 +1,7 @@
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo, type ReactNode } from "react";
 import type * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { makeScreenTexture } from "./screens";
 import { aluminiumMatcap } from "./matcap";
-import type { ScreenId } from "./keyframes";
 
 // Procedural laptop (docs/adr/0003). Units: width 3, origin at the base center.
 // The lid group pivots on the hinge at the back edge; rotation.x = -angle opens it.
@@ -11,10 +9,12 @@ import type { ScreenId } from "./keyframes";
 
 export const LAPTOP = { w: 3, baseH: 0.09, d: 2.05, lidT: 0.045 } as const;
 
-type Props = { screen: ScreenId };
+// The display itself is passed in as children: a 2.8 x 1.75 face, already oriented on the lid.
+export const SCREEN = { w: 2.8, h: 1.75 } as const;
 
-export const Laptop = forwardRef<THREE.Group, Props>(function Laptop({ screen }, lidRef) {
-  const texture = useMemo(() => makeScreenTexture(screen), [screen]);
+type Props = { children: ReactNode };
+
+export const Laptop = forwardRef<THREE.Group, Props>(function Laptop({ children }, lidRef) {
   const matcap = useMemo(() => aluminiumMatcap(), []);
   const { w, baseH, d, lidT } = LAPTOP;
   const base = useMemo(() => new RoundedBoxGeometry(w, baseH, d, 4, 0.04), [w, baseH, d]);
@@ -44,10 +44,9 @@ export const Laptop = forwardRef<THREE.Group, Props>(function Laptop({ screen },
           <planeGeometry args={[w - 0.04, d - 0.08]} />
           <meshBasicMaterial color="#060608" />
         </mesh>
-        <mesh rotation-x={Math.PI / 2} position={[0, -0.002, d / 2 + 0.03]}>
-          <planeGeometry args={[2.8, 1.75]} />
-          <meshBasicMaterial map={texture} toneMapped={false} />
-        </mesh>
+        <group rotation-x={Math.PI / 2} position={[0, -0.002, d / 2 + 0.03]}>
+          {children}
+        </group>
       </group>
     </group>
   );

@@ -1,8 +1,11 @@
 // AD Account Manager sample data (ticket 09). Fictional people on a fictional contoso.local domain,
 // written into a scratch copy's SQLite database. Run from the copy's folder so its Prisma client loads:
-//   node --env-file=.env <portfolio>/scripts/capture/ad-sample-data.cjs
-const { createRequire } = require("node:module");
-const { PrismaClient } = createRequire(process.cwd() + "/")("@prisma/client");
+//   node --env-file=.env <portfolio>/scripts/capture/ad-sample-data.mjs
+import { createRequire } from "node:module";
+
+// Resolve Prisma from the copy being seeded (the current directory), not from this repo.
+const load = createRequire(process.cwd() + "/");
+const { PrismaClient } = load("@prisma/client");
 
 const prisma = new PrismaClient();
 const people = [
@@ -93,4 +96,4 @@ async function main() {
   console.log("sample data:", jobs.length, "jobs,", people.length, "people");
 }
 
-main().finally(() => prisma.$disconnect());
+await main().finally(() => prisma.$disconnect());

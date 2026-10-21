@@ -33,6 +33,16 @@ export function Pill({
   );
 }
 
+// Labels what a Device screen shows. Only rendered alongside a Device (globals.css gate),
+// so a visitor never mistakes sample figures for real ones (docs/adr/0004).
+function StageCaption({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <p data-stage-caption className={`text-center text-[12px] text-ink-muted ${className}`}>
+      {children}
+    </p>
+  );
+}
+
 export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-stage/80 backdrop-blur-xl backdrop-saturate-150">
@@ -87,6 +97,7 @@ export function Hero() {
         aria-hidden
         className="mt-10 h-[clamp(220px,40svh,480px)] w-full max-w-[820px]"
       />
+      <StageCaption className="mt-3">FlowPulse demo workspace, sample data</StageCaption>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Pill href="#flowpulse" primary>
           See FlowPulse
@@ -149,8 +160,9 @@ function Project({ project }: { project: FeaturedProject }) {
       <div
         data-stage-slot={project.slug}
         aria-hidden
-        className="mx-auto mb-20 h-[clamp(260px,62svh,640px)] w-full max-w-[1000px] lg:mb-28"
+        className="mx-auto h-[clamp(240px,min(62svh,80vw),640px)] w-full max-w-[1000px]"
       />
+      <StageCaption className="mt-6 mb-20 lg:mt-10 lg:mb-28">{project.footageNote}</StageCaption>
       <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
       <div className="lg:sticky lg:top-28 lg:self-start">
         <h2

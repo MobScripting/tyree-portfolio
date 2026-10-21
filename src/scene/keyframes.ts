@@ -6,7 +6,10 @@ export type Pose = { rx: number; ry: number; lid: number };
 export type ScreenId = "flowpulse" | "ad";
 
 export type SlotDef = {
+  // Canvas placeholder shown until footage loads, and with no footage at all.
   screen: ScreenId;
+  // Screenshots shown in order across the slot's scroll progress, cross-fading between them.
+  stills: string[];
   enter: Pose;
   rest: Pose;
   exit: Pose;
@@ -14,9 +17,13 @@ export type SlotDef = {
   intro?: boolean;
 };
 
+const fp = (name: string) => `/footage/flowpulse/${name}`;
+const ad = (name: string) => `/footage/ad-manager/${name}`;
+
 export const slots: Record<string, SlotDef> = {
   hero: {
     screen: "flowpulse",
+    stills: [fp("invoices.jpg")],
     intro: true,
     enter: { rx: 0.32, ry: 0, lid: 1.9 },
     rest: { rx: 0.32, ry: 0, lid: 1.9 },
@@ -24,12 +31,14 @@ export const slots: Record<string, SlotDef> = {
   },
   flowpulse: {
     screen: "flowpulse",
+    stills: [fp("invoices.jpg"), fp("reports.jpg"), fp("reconcile.jpg")],
     enter: { rx: 0.5, ry: -0.95, lid: 1.2 },
     rest: { rx: 0.26, ry: -0.38, lid: 1.9 },
     exit: { rx: 0.2, ry: 0.15, lid: 1.9 },
   },
   "ad-manager": {
     screen: "ad",
+    stills: [ad("jobs.jpg"), ad("job-partial.jpg"), ad("templates.jpg")],
     enter: { rx: 0.5, ry: 0.95, lid: 1.2 },
     rest: { rx: 0.26, ry: 0.38, lid: 1.9 },
     exit: { rx: 0.2, ry: -0.15, lid: 1.9 },
@@ -44,4 +53,15 @@ export function poseAt(def: SlotDef, t: number): Pose {
   const e = 1 - Math.pow(1 - Math.min(Math.max(u, 0), 1), 2);
   const k = t < 0 ? e : u * u;
   return { rx: lerp(from.rx, to.rx, k), ry: lerp(from.ry, to.ry, k), lid: lerp(from.lid, to.lid, k) };
+}
+
+// Which two stills to show at scroll progress t, and how far to fade from the first to the
+// second. Each still holds for most of its share, then cross-fades quickly into the next.
+export function screenAt(count: number, t: number): { a: number; b: number; mix: number } {
+  if (count < 2) return { a: 0, b: 0, mix: 0 };
+  const f = ((Math.min(Math.max(t, -1), 1) + 1) / 2) * (count - 1);
+  const a = Math.min(Math.floor(f), count - 2);
+  const frac = f - a;
+  const s = Math.min(Math.max((frac - 0.4) / 0.2, 0), 1);
+  return { a, b: a + 1, mix: s * s * (3 - 2 * s) };
 }
