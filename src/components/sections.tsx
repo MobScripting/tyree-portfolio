@@ -2,6 +2,7 @@ import Link from "next/link";
 import { profile } from "@/content/profile";
 import { featured, lab, type FeaturedProject } from "@/content/projects";
 import { experience } from "@/content/experience";
+import { resumePdf } from "@/content/resume";
 import { CopyEmail } from "./CopyEmail";
 
 export const shell = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
@@ -15,7 +16,8 @@ export function Pill({
   children: React.ReactNode;
   primary?: boolean;
 }) {
-  const Tag = href.startsWith("/") ? Link : "a";
+  // Routes go through Link; files like the resume PDF need a plain anchor.
+  const Tag = href.startsWith("/") && !/.w+$/.test(href) ? Link : "a";
   return (
     <Tag
       href={href}
@@ -38,17 +40,19 @@ export function Nav() {
         aria-label="Primary"
         className={`${shell} flex h-14 items-center justify-between text-[14px]`}
       >
-        <Link href="/" className="font-semibold tracking-tight text-ink no-underline">
+        <Link href="/" className="font-semibold tracking-tight whitespace-nowrap text-ink no-underline">
           {profile.name}
         </Link>
-        <ul className="flex items-center gap-5 text-ink-muted sm:gap-7">
+        <ul className="flex items-center gap-3.5 text-[13px] text-ink-muted sm:gap-7 sm:text-[14px]">
           {[
             ["/#work", "Work"],
             ["/#ai", "AI"],
             ["/#experience", "Experience"],
+            ["/resume", "Resume"],
             ["/#contact", "Contact"],
           ].map(([href, label]) => (
-            <li key={href}>
+            // Experience is one scroll away on phones; dropping it keeps the bar on one line.
+            <li key={href} className={href === "/#experience" ? "max-sm:hidden" : undefined}>
               <Link href={href} className="no-underline transition-colors hover:text-ink">
                 {label}
               </Link>
@@ -282,7 +286,7 @@ export function Experience() {
         id="experience-title"
         className="text-[clamp(2.5rem,5vw,4rem)] leading-[1.02] font-semibold tracking-[-0.035em]"
       >
-        Six years keeping systems up.
+        Keeping systems up since 2022.
       </h2>
       <ol className="mt-16 space-y-16">
         {experience.map((job) => (
@@ -297,6 +301,7 @@ export function Experience() {
                 {job.start} to {job.end} · {job.place}
               </p>
             </div>
+            {job.bullets.length > 0 && (
             <ul className="space-y-3 text-[16px] leading-relaxed text-ink-muted">
               {job.bullets.map((b) => (
                 <li key={b.text} className="max-w-[64ch] text-pretty">
@@ -304,6 +309,7 @@ export function Experience() {
                 </li>
               ))}
             </ul>
+            )}
           </li>
         ))}
       </ol>
@@ -367,6 +373,7 @@ export function Contact() {
         </a>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <CopyEmail email={profile.email} />
+          <Pill href={resumePdf.fullstack}>Download resume</Pill>
           <Pill href={profile.links.github}>GitHub</Pill>
           {profile.links.linkedin && <Pill href={profile.links.linkedin}>LinkedIn</Pill>}
         </div>

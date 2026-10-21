@@ -24,7 +24,7 @@ Get Tyree hired by proving he builds and runs real software. Success means a rec
 
 ## Positioning
 
-He owns the stack from the database to the server rack. That rests on 6 years of hands-on IT infrastructure (Field Engineer at Unbound Digital; Help Desk at K-VA-T Food Stores) plus a self-built, self-hosted, multi-tenant SaaS in production (FlowPulse) and an Active Directory automation tool that automates his own day job. Most developer portfolios can't truthfully claim both halves.
+He owns the stack from the database to the server rack. That rests on 4+ years (since Mar 2022) of hands-on IT infrastructure (Field Engineer at Unbound Digital; Help Desk at K-VA-T Food Stores) plus a self-built, self-hosted, multi-tenant SaaS in production (FlowPulse) and an Active Directory automation tool that automates his own day job. Most developer portfolios can't truthfully claim both halves.
 
 ## Operating Context
 

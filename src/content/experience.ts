@@ -1,6 +1,6 @@
 import type { Track } from "./profile";
 
-// Reframed from the source resume (Downloads/Resume-1.pdf). Wording awaits the user's approval (ticket 07).
+// Reframed from the source resume. Wording approved by the user on 2026-10-21 (ticket 07).
 
 export type Bullet = { text: string; tracks: Track[] };
 
@@ -61,5 +61,13 @@ export const experience: Job[] = [
         tracks: ["fullstack"],
       },
     ],
+  },
+  {
+    role: "Day Stocker",
+    company: "Food City",
+    place: "Bristol, VA",
+    start: "May 2019",
+    end: "Mar 2022",
+    bullets: [],
   },
 ];

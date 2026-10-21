@@ -74,6 +74,28 @@ html[data-stage="on"] [data-stage-slot] {
   display: block;
 }
 
+/* Printing the resume: only the sheet, edge to edge on US Letter. */
+@page {
+  size: letter;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    background: #fff;
+  }
+  .resume-toolbar {
+    display: none;
+  }
+  .resume-page {
+    padding: 0;
+  }
+  .resume-sheet {
+    box-shadow: none;
+    max-width: none;
+  }
+}
+
 .tabular {
   font-variant-numeric: tabular-nums;
 }

@@ -13,6 +13,7 @@ Personal portfolio for Tyree Chappell, aimed at full-stack/SaaS and AI/LLM engin
 - `npm run lint`: ESLint.
 - `npm run typecheck`: runs `next typegen` then `tsc`. `LayoutProps`/`PageProps` are generated types, so plain `tsc` fails without typegen.
 - `node scripts/capture.mjs [baseUrl]`: headless Playwright captures with SwiftShader WebGL into `.impeccable/review/`: desktop 1440 and mobile 390, full page, first viewport, each stage slot, and the hero intro. It also prints stage state, horizontal overflow and console errors. Use it when the browser pane can't screenshot.
+- `npm run resume:pdf`: prints `/resume` to `public/Tyree-Chappell-Resume-FullStack.pdf` via Playwright. Run it against `npx next start -p 3100` after `npm run build`, and rerun it whenever `src/content/` changes. It fails if the sheet passes one Letter page or the text contains a phone-like number. Commit the regenerated PDF.
 - `node scripts/lighthouse.mjs [url]`: Lighthouse mobile run through Playwright's Chromium (the Lighthouse CLI's own launcher fails here). Run it against `npx next start -p 3100` after `npm run build`. It uses SwiftShader, the software-GL worst case; for the real-GPU number, swap the flags for `--use-angle=d3d11 --ignore-gpu-blocklist --enable-gpu`.
 
 ## Where decisions live (read before changing direction)
@@ -36,7 +37,8 @@ Personal portfolio for Tyree Chappell, aimed at full-stack/SaaS and AI/LLM engin
 - Dev-server caveat: Turbopack's dev server once served a stale `globals.css` chunk (missing the slot rules). Verify CSS-dependent behavior on `next build` + `next start`, or restart dev.
 - `/work/[slug]` renders case studies. Header, stats, stack and the walkthrough CTA come from `projects.ts`; the body is `src/content/case-studies/<slug>.mdx`, registered in the page's `studies` map. MDX elements are styled in `src/mdx-components.tsx`, which also provides `<Architecture>` (an HTML diagram, kept in the DOM per ADR 0001). Cache Components forbids `dynamicParams`, so unknown slugs call `notFound()`.
 - `StageLoader` mounts from the home page, not the layout: other routes have no slots.
-- Planned (see tickets): `/resume` print page with Playwright PDF output, and the Assistant API route.
+- `/resume` renders `components/Resume.tsx` from `content/resume.ts` (resume-only bullets, skills, education) plus `profile` and `experience`, filtered by track tags. It's a white Letter sheet; print CSS in `globals.css` hides the toolbar. Space is nearly full (1048/1056px).
+- Planned (see tickets): the AI resume variant (ticket 15) and the Assistant API route.
 
 ## Constraints
 
