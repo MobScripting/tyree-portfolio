@@ -156,6 +156,13 @@ export const featured: FeaturedProject[] = [
 
 export const lab: LabItem[] = [
   {
+    name: "unitwatch",
+    kind: "Maintenance app for small landlords · In development",
+    body: "Residents report a repair in about a minute, with photos, and landlords track it to resolution while every unit keeps a permanent history. It's an Expo app on Supabase, planned with a written spec, decision records and 14 tickets. The waitlist page is live, with sign-ups stored in a Postgres table where public visitors can only add rows.",
+    tracks: ["fullstack"],
+    link: { href: "https://www.unitwatch.app", label: "Join the waitlist" },
+  },
+  {
     name: "Tended Earth",
     kind: "3D survival game · Godot 4",
     body: "A painterly survival game set in the world of the novel Ash and Bloom. I direct and program it with Claude Code driving the Godot editor over MCP: scenes, scripts, test runs and error reading, with every design call recorded as a numbered decision.",
