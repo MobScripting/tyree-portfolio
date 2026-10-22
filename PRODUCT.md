@@ -35,7 +35,7 @@ Recruiters visit from a link in an application, a LinkedIn profile or a resume, 
 - Every fact lives in HTML; the 3D Stage is decoration (docs/adr/0001).
 - The site and both resume variants come from one content source (docs/adr/0002).
 - The FlowPulse repo is private: there are no code links, only a "request a walkthrough" contact.
-- Personal details shown publicly: name, email (mobhater02@gmail.com, the user's choice), "Johnson City, TN · open to relocate", GitHub (MobScripting). No phone number or street address anywhere public.
+- Personal details shown publicly: name, email (t.chappell0222@gmail.com, the user's choice), "Johnson City, TN · open to relocate", GitHub (MobScripting). No phone number or street address anywhere public.
 - The Assistant runs entirely in the visitor's browser (docs/adr/0006): BM25 retrieval over site content, plus an opt-in on-device Llama 3.2 3B through WebLLM. It has no server cost and no API key, and answers only from the site's content, with citations.
 - Open: LinkedIn URL (hidden until provided), custom domain (later).
 

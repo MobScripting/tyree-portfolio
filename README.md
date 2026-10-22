@@ -41,4 +41,4 @@ Lint and type-check with `npm run lint` and `npm run typecheck`. [`CLAUDE.md`](C
 
 ## Contact
 
-[mobhater02@gmail.com](mailto:mobhater02@gmail.com) · [GitHub](https://github.com/MobScripting) · Johnson City, TN, open to relocate
+[t.chappell0222@gmail.com](mailto:t.chappell0222@gmail.com) · [GitHub](https://github.com/MobScripting) · Johnson City, TN, open to relocate
